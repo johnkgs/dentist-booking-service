@@ -10,5 +10,11 @@
     { "pattern": "packages/*/" },
     { "pattern": "tools/*/" }
   ],
+  "tailwindCSS.experimental.classRegex": [
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cx\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+  "tailwindCSS.experimental.configFile": "./tools/tailwind/base.ts",
   "typescript.tsdk": "node_modules/typescript/lib"
 }
