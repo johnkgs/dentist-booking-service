@@ -1,5 +1,5 @@
-import common from "./common";
+import common from "./common"
 
 export default {
-  common,
-} as const;
+  common
+} as const

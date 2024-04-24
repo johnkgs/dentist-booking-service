@@ -1,24 +1,24 @@
 /// <reference types="./types.d.ts" />
 
-import eslint from "@eslint/js";
-import importPlugin from "eslint-plugin-import";
-import tsEslint from "typescript-eslint";
+import eslint from "@eslint/js"
+import importPlugin from "eslint-plugin-import"
+import tsEslint from "typescript-eslint"
 
 export default tsEslint.config(
   {
     // Globally ignored files
-    ignores: ["**/*.config.js"],
+    ignores: ["**/*.config.js"]
   },
   {
     files: ["**/*.js", "**/*.ts", "**/*.tsx"],
     plugins: {
-      import: importPlugin,
+      import: importPlugin
     },
     extends: [
       eslint.configs.recommended,
       ...tsEslint.configs.recommended,
       ...tsEslint.configs.recommendedTypeChecked,
-      ...tsEslint.configs.stylisticTypeChecked,
+      ...tsEslint.configs.stylisticTypeChecked
     ],
     rules: {
       "no-console": ["error"],
@@ -30,29 +30,29 @@ export default tsEslint.config(
         {
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
+          caughtErrorsIgnorePattern: "^_"
+        }
       ],
       "@typescript-eslint/consistent-type-imports": [
         "warn",
-        { prefer: "type-imports", fixStyle: "separate-type-imports" },
+        { prefer: "type-imports", fixStyle: "separate-type-imports" }
       ],
       "@typescript-eslint/no-misused-promises": [
         2,
-        { checksVoidReturn: { attributes: false } },
+        { checksVoidReturn: { attributes: false } }
       ],
       "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
       "@typescript-eslint/no-unnecessary-condition": [
         "error",
         {
-          allowConstantLoopConditions: true,
-        },
+          allowConstantLoopConditions: true
+        }
       ],
-      "@typescript-eslint/no-non-null-assertion": "error",
-    },
+      "@typescript-eslint/no-non-null-assertion": "error"
+    }
   },
   {
     linterOptions: { reportUnusedDisableDirectives: true },
-    languageOptions: { parserOptions: { project: true } },
-  },
-);
+    languageOptions: { parserOptions: { project: true } }
+  }
+)

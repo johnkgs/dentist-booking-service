@@ -1,4 +1,4 @@
 export default {
   titles: {},
-  descriptions: {},
-} as const;
+  descriptions: {}
+} as const

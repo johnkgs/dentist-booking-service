@@ -5,14 +5,14 @@ const config = {
     {
       source: "/",
       destination: "/auth/sign-in",
-      permanent: false,
+      permanent: false
     },
     {
       source: "/auth",
       destination: "/auth/sign-in",
-      permanent: false,
-    },
-  ],
-};
+      permanent: false
+    }
+  ]
+}
 
-export default config;
+export default config

@@ -1,18 +1,18 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
 
-import { i18nMiddleware } from "@repo/translation/middleware";
+import { i18nMiddleware } from "@repo/translation/middleware"
 
 const isProtectedRoute = createRouteMatcher([
   "/:locale/monitor(.*)",
-  "/:locale/home(.*)",
-]);
+  "/:locale/home(.*)"
+])
 
 export default clerkMiddleware((auth, req) => {
-  if (isProtectedRoute(req)) auth().protect();
+  if (isProtectedRoute(req)) auth().protect()
 
-  return i18nMiddleware(req);
-});
+  return i18nMiddleware(req)
+})
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-};
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"]
+}
