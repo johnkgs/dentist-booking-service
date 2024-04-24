@@ -1,0 +1,29 @@
+{
+  "name": "@repo/translation",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts",
+    "./middleware": "./src/middleware.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .turbo node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next-international": "^1.2.4"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:^*",
+    "@repo/prettier-config": "workspace:^*",
+    "@repo/tsconfig": "workspace:^*",
+    "eslint": "^9.0.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  },
+  "prettier": "@repo/prettier-config"
+}
