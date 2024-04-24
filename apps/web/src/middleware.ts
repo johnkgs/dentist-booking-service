@@ -1,9 +1,16 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isProtectedRoute = createRouteMatcher(["/monitor(.*)"]);
+import { i18nMiddleware } from "@repo/translation/middleware";
+
+const isProtectedRoute = createRouteMatcher([
+  "/:locale/monitor(.*)",
+  "/:locale/home(.*)",
+]);
 
 export default clerkMiddleware((auth, req) => {
   if (isProtectedRoute(req)) auth().protect();
+
+  return i18nMiddleware(req);
 });
 
 export const config = {
