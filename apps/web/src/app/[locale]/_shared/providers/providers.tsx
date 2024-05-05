@@ -3,6 +3,8 @@ import { ClerkProvider } from "@clerk/nextjs"
 
 import { I18nProviderClient } from "@repo/translation/client"
 
+import { ConvexClientProvider } from "./convex-client-provider"
+
 interface Props {
   locale: string
 }
@@ -23,7 +25,7 @@ export function Providers(props: React.PropsWithChildren<Props>) {
           }
         }}
       >
-        {children}
+        <ConvexClientProvider>{children}</ConvexClientProvider>
       </ClerkProvider>
     </I18nProviderClient>
   )
