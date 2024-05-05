@@ -1,0 +1,32 @@
+{
+  "name": "@repo/convex",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./_generated/*": "./convex/_generated/*.js"
+  },
+  "scripts": {
+    "dev": "pnpm with-env convex dev",
+    "predev": "pnpm with-env convex dev --until-success && convex dashboard",
+    "clean": "git clean -xdf .turbo node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../.env -c --"
+  },
+  "dependencies": {
+    "convex": "^1.11.3",
+    "convex-helpers": "^0.1.36"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:^*",
+    "@repo/prettier-config": "workspace:^*",
+    "@repo/tsconfig": "workspace:^*",
+    "dotenv-cli": "^7.4.1",
+    "eslint": "^9.0.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  },
+  "prettier": "@repo/prettier-config"
+}
