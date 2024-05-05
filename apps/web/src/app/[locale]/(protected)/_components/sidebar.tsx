@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { Protect } from "@clerk/nextjs"
 
 import { useI18n } from "@repo/translation/client"
 import { Button } from "@repo/ui/button"
@@ -19,24 +20,28 @@ export function Sidebar() {
     {
       title: t("routes.home.base"),
       icon: LayoutGridIcon,
+      permission: "",
       href: "/home"
     },
     {
       title: t("routes.front_desk.base"),
       icon: MonitorIcon,
+      permission: "org:reception:manage",
       href: "/front-desk"
     },
     {
       title: t("routes.appointments.base"),
       icon: CalendarIcon,
+      permission: "org:reception:manage",
       href: "/appointments"
     },
     {
       title: t("routes.my_agenda.base"),
       icon: ClipboardIcon,
+      permission: "org:patient:manage",
       href: "/my-agenda"
     }
-  ]
+  ] as const
 
   return (
     <aside
@@ -57,21 +62,26 @@ export function Sidebar() {
         </div>
         <ul className="gap-2 px-3 py-4 text-sm font-medium">
           {sidebar.map((item) => (
-            <li key={item.title}>
-              <Button
-                variant="ghost"
-                size="md"
-                className="w-full justify-start hover:text-primary"
-                asChild
-              >
-                <Link href={item.href}>
-                  <item.icon className="flex-shrink-0" />
-                  <span className="invisible ml-2 flex-1 whitespace-nowrap transition-[visibility] group-hover/sidebar:visible">
-                    {item.title}
-                  </span>
-                </Link>
-              </Button>
-            </li>
+            <Protect
+              key={item.title}
+              permission={item.permission as ClerkAuthorization["permission"]}
+            >
+              <li>
+                <Button
+                  variant="ghost"
+                  size="md"
+                  className="w-full justify-start hover:text-primary"
+                  asChild
+                >
+                  <Link href={item.href}>
+                    <item.icon className="flex-shrink-0" />
+                    <span className="invisible ml-2 flex-1 whitespace-nowrap transition-[visibility] group-hover/sidebar:visible">
+                      {item.title}
+                    </span>
+                  </Link>
+                </Button>
+              </li>
+            </Protect>
           ))}
         </ul>
       </div>
