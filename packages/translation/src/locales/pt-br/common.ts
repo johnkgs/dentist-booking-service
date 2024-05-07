@@ -21,6 +21,7 @@ export default {
     day: "Dia",
     week: "Semana",
     month: "Mês",
-    year: "Ano"
+    year: "Ano",
+    today: "Hoje"
   }
 } as const
