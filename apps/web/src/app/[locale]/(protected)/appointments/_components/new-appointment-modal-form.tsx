@@ -218,6 +218,7 @@ export function NewAppointmentModalForm() {
                                     onSelect={(date) =>
                                       field.onChange(new Date(date))
                                     }
+                                    keywords={[hour.label]}
                                   >
                                     <CheckIcon
                                       className={cn(
@@ -275,6 +276,7 @@ export function NewAppointmentModalForm() {
                                     onSelect={(date) =>
                                       field.onChange(new Date(date))
                                     }
+                                    keywords={[hour.label]}
                                   >
                                     <CheckIcon
                                       className={cn(

@@ -100,7 +100,7 @@ export function NewScheduleModalForm() {
                 control={form.control}
                 name="search"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col space-y-4 px-2">
+                  <FormItem className="flex flex-col space-y-4">
                     <FormControl>
                       <Command shouldFilter={false}>
                         <CommandInput
@@ -123,9 +123,8 @@ export function NewScheduleModalForm() {
                           </CommandEmpty>
                           <CommandGroup>
                             {appointments?.map((appointment, index) => (
-                              <Fragment>
+                              <Fragment key={appointment._id}>
                                 <CommandItem
-                                  key={appointment._id}
                                   value={appointment._id}
                                   onSelect={(appointmentId) => {
                                     form.setValue(
