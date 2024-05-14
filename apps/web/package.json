@@ -21,6 +21,7 @@
     "@repo/translation": "workspace:^*",
     "@repo/ui": "workspace:^*",
     "@t3-oss/env-nextjs": "^0.10.0",
+    "@tanstack/react-table": "^8.17.3",
     "convex": "^1.11.3",
     "date-fns": "^3.6.0",
     "jotai": "^2.8.0",
