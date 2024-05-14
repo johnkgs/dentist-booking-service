@@ -14,6 +14,7 @@ export default {
   appointment_statuses: {
     finished: "Finalizado",
     on_going: "Em atendimento",
+    ongoing: "Em atendimento",
     waiting: "Aguardando atendimento",
     pending: "Pendente"
   },
