@@ -66,13 +66,16 @@ const CalendarEventContext = React.createContext<
   CalendarEventContextValue | undefined
 >({} as CalendarEventContextValue)
 
+export type CalendarEventAPI = CalendarEventContextValue
+
 type CalendarEventProps = React.PropsWithChildren<{
   view?: "week" | "day"
   initialDate?: string
+  setApi?: (api: CalendarEventAPI) => void
 }>
 
 const CalendarEvent = React.forwardRef<HTMLDivElement, CalendarEventProps>(
-  ({ view = "week", initialDate, children }, _ref) => {
+  ({ view = "week", initialDate, setApi, children }, _ref) => {
     const now = new Date()
     const date = initialDate ? parse(initialDate, "yyyy-MM-dd", now) : now
 
@@ -135,23 +138,44 @@ const CalendarEvent = React.forwardRef<HTMLDivElement, CalendarEventProps>(
       return `${formattedStart} - ${formattedEnd}`
     }, [currentDate])
 
+    const formattedDate = formatDate()
+    const style = { gridTemplateColumns }
+
+    const api = React.useMemo(
+      () => ({
+        view,
+        formattedDate,
+        currentDate,
+        daysToDisplay,
+        activeDays,
+        style,
+        activePeriod,
+        goToNext,
+        goToPrev,
+        goToToday
+      }),
+      [
+        view,
+        formattedDate,
+        currentDate,
+        daysToDisplay,
+        activeDays,
+        style,
+        activePeriod,
+        goToNext,
+        goToPrev,
+        goToToday
+      ]
+    )
+
+    React.useEffect(() => {
+      if (!setApi) return
+
+      setApi(api)
+    }, [api, setApi])
+
     return (
-      <CalendarEventContext.Provider
-        value={{
-          view,
-          formattedDate: formatDate(),
-          currentDate,
-          daysToDisplay,
-          activeDays,
-          style: {
-            gridTemplateColumns
-          },
-          activePeriod,
-          goToNext,
-          goToPrev,
-          goToToday
-        }}
-      >
+      <CalendarEventContext.Provider value={api}>
         {children}
       </CalendarEventContext.Provider>
     )
@@ -347,8 +371,8 @@ CalendarEventAppointment.displayName = "CalendarEventAppointment"
 const CalendarEventAppointmentItem = React.forwardRef<
   HTMLLIElement,
   React.HTMLAttributes<HTMLLIElement> & {
-    startDate: Date
-    endDate: Date
+    startDate: Date | string
+    endDate: Date | string
   }
 >(({ className, startDate, endDate, ...props }, _ref) => {
   const { activePeriod } = useCalendarEvent()
