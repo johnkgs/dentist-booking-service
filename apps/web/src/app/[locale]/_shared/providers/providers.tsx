@@ -1,5 +1,6 @@
 import { ptBR } from "@clerk/localizations"
 import { ClerkProvider } from "@clerk/nextjs"
+import { Provider } from "jotai"
 
 import { I18nProviderClient } from "@repo/translation/client"
 
@@ -25,7 +26,9 @@ export function Providers(props: React.PropsWithChildren<Props>) {
           }
         }}
       >
-        <ConvexClientProvider>{children}</ConvexClientProvider>
+        <ConvexClientProvider>
+          <Provider>{children}</Provider>
+        </ConvexClientProvider>
       </ClerkProvider>
     </I18nProviderClient>
   )
