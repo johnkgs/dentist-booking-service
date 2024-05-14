@@ -24,6 +24,7 @@ import {
 import { Separator } from "@repo/ui/separator"
 import { cn } from "@repo/ui/utils"
 
+import { SECOND } from "~/app/[locale]/_shared/utils/constants"
 import { getStatuses } from "~/app/[locale]/_shared/utils/status"
 import { calendarAPIAtom } from "../_atoms/calendar-atom"
 import { doctorIdsAtom } from "../_atoms/doctor-atom"
@@ -35,8 +36,8 @@ export function Appointments() {
   const doctorIds = useAtomValue(doctorIdsAtom)
 
   const appointments = useQuery(api.appointments.list, {
-    startDate: getUnixTime(calendarAPI?.activePeriod.start ?? 0),
-    endDate: getUnixTime(calendarAPI?.activePeriod.end ?? 0),
+    startDate: getUnixTime(calendarAPI?.activePeriod.start ?? 0) * SECOND,
+    endDate: getUnixTime(calendarAPI?.activePeriod.end ?? 0) * SECOND,
     doctorIds
   })
 

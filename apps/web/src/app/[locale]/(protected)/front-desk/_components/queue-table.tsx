@@ -1,22 +1,17 @@
 "use client"
 
-import { useMemo } from "react"
-import { usePaginatedQuery } from "convex/react"
-import { intlFormat } from "date-fns/intlFormat"
+import { flexRender } from "@tanstack/react-table"
+import { useQuery } from "convex/react"
+import { useAtomValue } from "jotai"
 
 import { api } from "@repo/convex/_generated/api"
 import { useI18n } from "@repo/translation/client"
-import { Badge } from "@repo/ui/badge"
-import { Button } from "@repo/ui/button"
-import { PencilIcon, TrashIcon } from "@repo/ui/icons"
 import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious
+  PaginationLink
 } from "@repo/ui/pagination"
 import {
   Table,
@@ -27,91 +22,151 @@ import {
   TableRow
 } from "@repo/ui/table"
 
-import { getStatuses } from "~/app/[locale]/_shared/utils/status"
+import {
+  queuePageCountAtom,
+  queueTableFiltersAtom
+} from "../_atoms/queue-table-filter-atom"
+import { queueColumns } from "../_utils/queue-columns"
+import { useTablePagination } from "../../_hooks/use-table-pagination"
+import { useTableWithPagination } from "../../_hooks/use-table-with-pagination"
 
 export function QueueTable() {
   const t = useI18n()
-  const statuses = useMemo(() => getStatuses(t), [t])
 
-  const { results } = usePaginatedQuery(
-    api.receptionQueue.list,
-    {},
-    { initialNumItems: 10 }
-  )
+  const filters = useAtomValue(queueTableFiltersAtom)
+
+  const data = useQuery(api.receptionQueue.list, filters)
+  const table = useTableWithPagination({
+    limit: filters.limit,
+    page: filters.page,
+    totalPages: data?.pages ?? 1,
+    pageCountAtom: queuePageCountAtom,
+    filtersAtom: queueTableFiltersAtom,
+    options: {
+      data: data?.rows ?? [],
+      columns: queueColumns,
+      meta: {
+        t
+      }
+    }
+  })
+
+  const { state, pageCount, setPageIndex } = table
+  const { pageIndex } = state.pagination
+
+  const {
+    handleGotoPage,
+    isGreaterThanThree,
+    isGreaterThanTwo,
+    isLowerThreeThanMax,
+    isLowerTwoThanMax,
+    nextPages,
+    previousPages,
+    lastPage,
+    currentPage
+  } = useTablePagination({
+    pageCount,
+    pageIndex,
+    setPageIndex
+  })
 
   return (
     <div className="flex flex-col gap-4">
       <Table className="rounded-md border">
         <TableHeader className="rounded-t-md">
-          <TableRow>
-            <TableHead>{t("form.labels.appointment")}</TableHead>
-            <TableHead>{t("form.labels.patient")}</TableHead>
-            <TableHead>{t("form.labels.doctor")}</TableHead>
-            <TableHead>{t("form.labels.room")}</TableHead>
-            <TableHead>{t("form.labels.status")}</TableHead>
-            <TableHead>{t("form.labels.actions")}</TableHead>
-          </TableRow>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                )
+              })}
+            </TableRow>
+          ))}
         </TableHeader>
         <TableBody>
-          {results.map((item) => (
-            <TableRow key={item._id} className="odd:bg-muted/20">
-              <TableCell>
-                {intlFormat(item._creationTime, {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit"
-                })}
-              </TableCell>
-              <TableCell>{item.patient?.name}</TableCell>
-              <TableCell>{item.doctor?.name}</TableCell>
-              <TableCell>{item.room}</TableCell>
-              <TableCell>
-                <Badge colorScheme={statuses[item.status].color}>
-                  {statuses[item.status].text}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="icon">
-                    <PencilIcon className="size-5" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-red-500 hover:bg-red-500/90 hover:text-white"
-                  >
-                    <TrashIcon className="size-5" />
-                  </Button>
-                </div>
-              </TableCell>
+          {table.getRowModel().rows.map((row) => (
+            <TableRow
+              key={row.id}
+              data-state={row.getIsSelected() && "selected"}
+              className="odd:bg-muted/20"
+            >
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
       <Pagination>
         <PaginationContent>
+          {isGreaterThanTwo && (
+            <>
+              <PaginationItem>
+                <PaginationLink onClick={handleGotoPage(0)}>1</PaginationLink>
+              </PaginationItem>
+
+              {isGreaterThanThree && (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )}
+            </>
+          )}
+
+          {previousPages.length > 0 && (
+            <>
+              {previousPages.map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink onClick={handleGotoPage(page - 1)}>
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+            </>
+          )}
+
           <PaginationItem>
-            <PaginationPrevious href="#" />
+            <PaginationLink isActive>{currentPage}</PaginationLink>
           </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
+
+          {nextPages.length > 0 && (
+            <>
+              {nextPages.map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink onClick={handleGotoPage(page - 1)}>
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+            </>
+          )}
+
+          {isLowerTwoThanMax && (
+            <>
+              {isLowerThreeThanMax && (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )}
+
+              <PaginationItem>
+                <PaginationLink onClick={handleGotoPage(lastPage - 1)}>
+                  {lastPage}
+                </PaginationLink>
+              </PaginationItem>
+            </>
+          )}
         </PaginationContent>
       </Pagination>
     </div>

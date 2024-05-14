@@ -2,29 +2,12 @@ import Link from "next/link"
 
 import { getI18n } from "@repo/translation/server"
 import { Button } from "@repo/ui/button"
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from "@repo/ui/dialog"
-import { PlusIcon, ScreenShareIcon, SearchIcon } from "@repo/ui/icons"
-import { Input } from "@repo/ui/input"
-import { Label } from "@repo/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@repo/ui/select"
+import { ScreenShareIcon } from "@repo/ui/icons"
 import { Separator } from "@repo/ui/separator"
 
+import { NewScheduleModalForm } from "./_components/new-schedule-modal-form"
 import { QueueTable } from "./_components/queue-table"
+import { TableFilters } from "./_components/queue-table-filters"
 
 export default async function Page() {
   const t = await getI18n()
@@ -43,38 +26,7 @@ export default async function Page() {
               </Button>
             </div>
             <div className="flex justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <SearchIcon className="absolute left-2.5 top-3 size-4 text-muted-foreground" />
-
-                  <Input
-                    type="search"
-                    placeholder={t("form.placeholders.search", {
-                      field: t("form.labels.appointment").toLowerCase()
-                    })}
-                    className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-                  />
-                </div>
-
-                <Select>
-                  <SelectTrigger className="font-normal text-muted-foreground sm:w-[300px] md:w-[200px] lg:w-[300px]">
-                    <SelectValue placeholder={t("form.labels.status")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="week">
-                        {t("common.appointment_statuses.on_going")}
-                      </SelectItem>
-                      <SelectItem value="day">
-                        {t("common.appointment_statuses.waiting")}
-                      </SelectItem>
-                      <SelectItem value="month">
-                        {t("common.appointment_statuses.finished")}
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
+              <TableFilters />
 
               <div className="flex gap-4">
                 <Separator orientation="vertical" />
@@ -83,50 +35,7 @@ export default async function Page() {
                   {t("form.actions.call_patient")}
                 </Button>
 
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button>
-                      <PlusIcon className="mr-2" />
-                      {t("form.labels.new_schedule")}
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>{t("form.labels.new_schedule")}</DialogTitle>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="flex flex-col gap-4 px-2">
-                        <Label htmlFor="patient">
-                          {t("form.labels.patient")}{" "}
-                          <span className="text-red-500">*</span>
-                        </Label>
-                        <Input id="patient" />
-                      </div>
-                      <div className="flex flex-col gap-4 px-2">
-                        <Label htmlFor="doctor">
-                          {t("form.labels.doctor")}
-                          <span className="text-red-500">*</span>
-                        </Label>
-                        <Input id="doctor" />
-                      </div>
-
-                      <div className="flex flex-col gap-4 px-2">
-                        <Label htmlFor="doctor-assistant">
-                          {t("form.labels.doctor_assistant")}
-                        </Label>
-                        <Input id="doctor-assistant" />
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <DialogClose asChild>
-                        <Button variant="outline">
-                          {t("form.actions.cancel")}
-                        </Button>
-                      </DialogClose>
-                      <Button type="submit">{t("form.actions.save")}</Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                <NewScheduleModalForm />
               </div>
             </div>
           </div>
