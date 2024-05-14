@@ -371,8 +371,8 @@ CalendarEventAppointment.displayName = "CalendarEventAppointment"
 const CalendarEventAppointmentItem = React.forwardRef<
   HTMLLIElement,
   React.HTMLAttributes<HTMLLIElement> & {
-    startDate: Date | string
-    endDate: Date | string
+    startDate: Date | string | number
+    endDate: Date | string | number
   }
 >(({ className, startDate, endDate, ...props }, _ref) => {
   const { activePeriod } = useCalendarEvent()

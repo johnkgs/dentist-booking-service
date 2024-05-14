@@ -17,9 +17,9 @@ export default defineSchema({
   appointments: defineTable({
     doctorId: v.id("users"),
     patientId: v.id("patients"),
-    startDate: v.string(),
-    endDate: v.string(),
-    diffInMinutes: v.optional(v.number()),
+    startDate: v.number(),
+    endDate: v.number(),
+    diffInMinutes: v.number(),
     status: v.union(
       v.literal("pending"),
       v.literal("waiting"),

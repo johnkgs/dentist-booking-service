@@ -10,6 +10,7 @@ import {
   eachMinuteOfInterval,
   endOfDay,
   format,
+  getUnixTime,
   intlFormat,
   isEqual,
   parse,
@@ -56,6 +57,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@repo/ui/popover"
 import { cn } from "@repo/ui/utils"
 
 import type { NewAppointmentFields } from "../_validations/new-appointment-validation"
+import { SECOND } from "~/app/[locale]/_shared/utils/constants"
 import { getNewAppointmentSchema } from "../_validations/new-appointment-validation"
 
 const hourDates = eachMinuteOfInterval(
@@ -120,8 +122,8 @@ export function NewAppointmentModalForm() {
       doctorId: values.doctorId as Id<"users">,
       patientId: values.patientId as Id<"patients">,
       room: values.room,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
+      startDate: getUnixTime(startDate) * SECOND,
+      endDate: getUnixTime(endDate) * SECOND,
       diffInMinutes: differenceInMinutes(endDate, startDate)
     } satisfies FunctionArgs<typeof api.appointments.newAppointment>
 

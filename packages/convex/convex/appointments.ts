@@ -70,7 +70,7 @@ export const list = queryWithAuth({
       ...appointment,
       patient: await ctx.db.get(appointment.patientId),
       doctor: await ctx.db.get(appointment.doctorId),
-      showPreviewDate: (appointment.diffInMinutes ?? 0) >= 45
+      showPreviewDate: appointment.diffInMinutes >= 45
     }))
   }
 })
@@ -101,7 +101,7 @@ export const mine = queryWithAuth({
         ...appointment,
         patient: await ctx.db.get(appointment.patientId),
         doctor: await ctx.db.get(appointment.doctorId),
-        showPreviewDate: (appointment.diffInMinutes ?? 0) >= 45
+        showPreviewDate: appointment.diffInMinutes >= 45
       }
     })
   }
@@ -110,8 +110,8 @@ export const mine = queryWithAuth({
 export const newAppointment = mutationWithAuth({
   args: {
     room: v.string(),
-    startDate: v.string(),
-    endDate: v.string(),
+    startDate: v.number(),
+    endDate: v.number(),
     diffInMinutes: v.number(),
     doctorId: v.id("users"),
     patientId: v.id("patients")
