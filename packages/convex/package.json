@@ -18,7 +18,8 @@
   "dependencies": {
     "convex": "^1.11.3",
     "convex-helpers": "^0.1.36",
-    "date-fns": "^3.6.0"
+    "date-fns": "^3.6.0",
+    "match-sorter": "^6.3.4"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:^*",

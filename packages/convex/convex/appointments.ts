@@ -6,8 +6,6 @@ import { isWithinInterval } from "date-fns"
 
 import { mutationWithAuth, queryWithAuth } from "./lib/auth"
 
-const SECOND = 1000
-
 export const doctorOptions = queryWithAuth({
   args: {},
   handler: async (ctx) => {
@@ -63,8 +61,8 @@ export const list = queryWithAuth({
       ctx.db.query("appointments"),
       (appointment) =>
         isWithinInterval(appointment._creationTime, {
-          start: startDate * SECOND,
-          end: endDate * SECOND
+          start: startDate,
+          end: endDate
         }) && doctorIds.includes(appointment.doctorId)
     ).collect()
 
@@ -92,8 +90,8 @@ export const mine = queryWithAuth({
       .withIndex("by_doctor_id", (q) => q.eq("doctorId", doctorId))
       .filter((q) =>
         q.and(
-          q.gte(q.field("_creationTime"), startDate * SECOND),
-          q.lte(q.field("_creationTime"), endDate * SECOND)
+          q.gte(q.field("_creationTime"), startDate),
+          q.lte(q.field("_creationTime"), endDate)
         )
       )
       .collect()
