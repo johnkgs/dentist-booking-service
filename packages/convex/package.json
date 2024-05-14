@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "convex": "^1.11.3",
-    "convex-helpers": "^0.1.36"
+    "convex-helpers": "^0.1.36",
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:^*",

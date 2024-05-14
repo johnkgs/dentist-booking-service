@@ -7,7 +7,16 @@ import type { QueryCtx } from "../_generated/server"
 import { mutation, query } from "../_generated/server"
 
 async function getUser(ctx: QueryCtx) {
-  return await ctx.auth.getUserIdentity()
+  const identity = await ctx.auth.getUserIdentity()
+
+  if (!identity) return null
+
+  return await ctx.db
+    .query("users")
+    .withIndex("by_token", (q) =>
+      q.eq("tokenIdentifier", identity.tokenIdentifier)
+    )
+    .unique()
 }
 
 export const queryWithAuth = customQuery(query, {

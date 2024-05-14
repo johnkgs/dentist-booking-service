@@ -14,7 +14,10 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as appointments from "../appointments.js";
 import type * as lib_auth from "../lib/auth.js";
+import type * as receptionQueue from "../receptionQueue.js";
+import type * as users from "../users.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -25,7 +28,10 @@ import type * as lib_auth from "../lib/auth.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  appointments: typeof appointments;
   "lib/auth": typeof lib_auth;
+  receptionQueue: typeof receptionQueue;
+  users: typeof users;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
