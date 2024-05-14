@@ -13,6 +13,7 @@ export default {
     new_schedule: "Novo atendimento",
     new_appointment: "Novo agendamento",
     appointment: "Atendimento",
+    scheduling: "Agendamento",
     patient: "Paciente",
     patients: "Pacientes",
     doctor: "Médico",
