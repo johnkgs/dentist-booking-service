@@ -17,7 +17,7 @@ import {
   SelectValue
 } from "@repo/ui/select"
 
-import { calendarAPIAtom } from "../_atoms/calendar-atom"
+import { calendarAPIAtom } from "../../_atoms/calendar-atom"
 
 export function CalendarEventActionHeader() {
   const api = useAtomValue(calendarAPIAtom)
