@@ -7,9 +7,11 @@ export default {
     monitor: "Monitor"
   },
   appointments: {
-    base: "Agendamentos"
+    base: "Agendamentos",
+    edit: "Edição"
   },
   my_agenda: {
-    base: "Minha agenda"
+    base: "Minha agenda",
+    edit: "Edição"
   }
 } as const
