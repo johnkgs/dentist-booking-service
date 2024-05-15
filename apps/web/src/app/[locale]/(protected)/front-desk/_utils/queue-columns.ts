@@ -9,9 +9,11 @@ import type { TableMetaBase } from "../../_types/table-meta"
 import { ActionsCell } from "../_components/cells/actions-cell"
 import { StatusCell } from "../_components/cells/status-cell"
 
-type List = FunctionReturnType<typeof api.receptionQueue.list>["rows"][number]
+export type ReceptionQueue = FunctionReturnType<
+  typeof api.receptionQueue.list
+>["rows"][number]
 
-const columnHelper = createColumnHelper<List>()
+const columnHelper = createColumnHelper<ReceptionQueue>()
 
 export const queueColumns = [
   columnHelper.accessor("_creationTime", {
@@ -48,5 +50,5 @@ export const queueColumns = [
     header: (info) =>
       (info.table.options.meta as TableMetaBase).t("form.labels.actions"),
     cell: ActionsCell
-  } satisfies ColumnDef<List>
+  } satisfies ColumnDef<ReceptionQueue>
 ]

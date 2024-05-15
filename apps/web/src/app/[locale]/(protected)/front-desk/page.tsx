@@ -3,7 +3,6 @@ import Link from "next/link"
 import { getI18n } from "@repo/translation/server"
 import { Button } from "@repo/ui/button"
 import { ScreenShareIcon } from "@repo/ui/icons"
-import { Separator } from "@repo/ui/separator"
 
 import { NewScheduleModalForm } from "./_components/new-schedule-modal-form"
 import { QueueTable } from "./_components/queue-table"
@@ -29,12 +28,6 @@ export default async function Page() {
               <TableFilters />
 
               <div className="flex gap-4">
-                <Separator orientation="vertical" />
-
-                <Button variant="outline">
-                  {t("form.actions.call_patient")}
-                </Button>
-
                 <NewScheduleModalForm />
               </div>
             </div>

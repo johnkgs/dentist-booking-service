@@ -26,10 +26,12 @@ export function TableFilters() {
 
   const statusOptions = useMemo(
     () =>
-      Object.entries(getStatuses(t)).map(([statusId, status]) => ({
-        value: statusId,
-        label: status.text
-      })),
+      Object.entries(getStatuses(t))
+        .map(([statusId, status]) => ({
+          value: statusId,
+          label: status.text
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
     [t]
   )
 
@@ -43,7 +45,6 @@ export function TableFilters() {
   }
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // TODO: Adicionar debounce
     setFilters((prev) => ({ ...prev, search: String(e.target.value) }))
   }
 
