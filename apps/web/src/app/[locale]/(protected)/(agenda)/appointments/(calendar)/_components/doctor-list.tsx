@@ -10,7 +10,7 @@ import { useI18n } from "@repo/translation/client"
 import { Checkbox } from "@repo/ui/checkbox"
 import { Input } from "@repo/ui/input"
 
-import { doctorIdsAtom } from "../../_atoms/doctor-atom"
+import { doctorIdsAtom } from "../../../_atoms/doctor-atom"
 
 export function DoctorList() {
   const t = useI18n()

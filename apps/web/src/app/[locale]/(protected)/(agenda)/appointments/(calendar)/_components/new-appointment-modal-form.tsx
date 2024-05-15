@@ -56,9 +56,9 @@ import { Input } from "@repo/ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "@repo/ui/popover"
 import { cn } from "@repo/ui/utils"
 
-import type { NewAppointmentFields } from "../../_validations/new-appointment-validation"
+import type { NewAppointmentFields } from "../../../_validations/appointment-validation"
 import { SECOND } from "~/app/[locale]/_shared/utils/constants"
-import { getNewAppointmentSchema } from "../../_validations/new-appointment-validation"
+import { getNewAppointmentSchema } from "../../../_validations/appointment-validation"
 
 const hourDates = eachMinuteOfInterval(
   {

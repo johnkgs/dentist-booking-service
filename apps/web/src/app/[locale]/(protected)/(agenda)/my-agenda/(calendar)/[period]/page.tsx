@@ -5,18 +5,18 @@ import {
   CalendarEventTimeIndicator
 } from "@repo/ui/calendar-event"
 
-import { CalendarLayout } from "../_components/calendar-layout"
-import { MyAppointments } from "./_components/my-appointments"
+import { Appointments } from "../../../_components/appointments"
+import { CalendarLayout } from "../../../_components/calendar-layout"
 
 export default function Page() {
   return (
     <div className="flex flex-auto flex-col overflow-y-auto overflow-x-hidden bg-background">
-      <CalendarLayout>
+      <CalendarLayout type="my-agenda">
         <CalendarEventHeader />
         <CalendarEventBody>
           <CalendarEventGrid />
           <CalendarEventTimeIndicator />
-          <MyAppointments />
+          <Appointments type="my-agenda" />
         </CalendarEventBody>
       </CalendarLayout>
     </div>

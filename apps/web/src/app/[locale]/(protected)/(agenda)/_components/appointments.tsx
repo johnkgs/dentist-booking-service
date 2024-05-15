@@ -9,7 +9,6 @@ import { useAtomValue } from "jotai"
 import type { Id } from "@repo/convex/_generated/dataModel"
 import { api } from "@repo/convex/_generated/api"
 import { useI18n } from "@repo/translation/client"
-import { Avatar, AvatarFallback } from "@repo/ui/avatar"
 import { Badge } from "@repo/ui/badge"
 import { Button } from "@repo/ui/button"
 import {
@@ -26,21 +25,42 @@ import {
 import { Separator } from "@repo/ui/separator"
 import { cn } from "@repo/ui/utils"
 
+import type { AppointmentType } from "../_atoms/calendar-atom"
 import { SECOND } from "~/app/[locale]/_shared/utils/constants"
 import { getStatuses } from "~/app/[locale]/_shared/utils/status"
-import { calendarAPIAtom } from "../../../_atoms/calendar-atom"
+import { getAppointmentsCalendarAPIAtom } from "../_atoms/calendar-atom"
+import { doctorIdsAtom } from "../_atoms/doctor-atom"
 
-export function MyAppointments() {
+const API_REQUESTS = {
+  "my-agenda": api.appointments.mine,
+  appointments: api.appointments.list
+}
+
+interface Props {
+  type: AppointmentType
+}
+
+export function Appointments(props: Props) {
+  const { type } = props
   const t = useI18n()
   const statuses = useMemo(() => getStatuses(t), [t])
-  const calendarAPI = useAtomValue(calendarAPIAtom)
+  const calendarAPIAtom = useMemo(
+    () => getAppointmentsCalendarAPIAtom(type),
+    [type]
+  )
 
-  const myAppointments = useQuery(api.appointments.mine, {
-    startDate: getUnixTime(calendarAPI?.activePeriod.start ?? 0) * SECOND,
-    endDate: getUnixTime(calendarAPI?.activePeriod.end ?? 0) * SECOND
-  })
   const removeAppointment = useMutation(api.appointments.removeAppointment)
   const editAppointment = useMutation(api.appointments.editAppointment)
+  const calendarAPI = useAtomValue(calendarAPIAtom)
+  const doctorIds = useAtomValue(doctorIdsAtom)
+
+  const request = API_REQUESTS[type]
+
+  const appointments = useQuery(request, {
+    startDate: getUnixTime(calendarAPI?.activePeriod.start ?? 0) * SECOND,
+    endDate: getUnixTime(calendarAPI?.activePeriod.end ?? 0) * SECOND,
+    doctorIds: type === "appointments" ? doctorIds : undefined
+  })
 
   const handleCallPatient = async (appointmentId: Id<"appointments">) => {
     await editAppointment({ appointmentId, status: "ongoing" })
@@ -52,7 +72,7 @@ export function MyAppointments() {
 
   return (
     <CalendarEventAppointment>
-      {myAppointments?.map((appointment, index) => (
+      {appointments?.map((appointment, index) => (
         <CalendarEventAppointmentItem
           startDate={appointment.startDate}
           endDate={appointment.endDate}
@@ -73,14 +93,15 @@ export function MyAppointments() {
                 {appointment.showPreviewDate && (
                   <p className="text-blue-500 group-hover:text-blue-700">
                     <time dateTime="2022-01-12T07:30">
-                      {intlFormat(appointment.startDate, {
-                        hour: "2-digit",
-                        minute: "2-digit"
-                      })}
-                      &nbsp;até&nbsp;
-                      {intlFormat(appointment.endDate, {
-                        hour: "2-digit",
-                        minute: "2-digit"
+                      {t("form.descriptions.schedule_at", {
+                        startDate: intlFormat(appointment.startDate, {
+                          hour: "2-digit",
+                          minute: "2-digit"
+                        }),
+                        endDate: intlFormat(appointment.endDate, {
+                          hour: "2-digit",
+                          minute: "2-digit"
+                        })
                       })}
                     </time>
                   </p>
@@ -91,10 +112,9 @@ export function MyAppointments() {
               <div className="flex flex-col gap-6">
                 <div className="flex items-center justify-between">
                   <span className="size-4 rounded-sm bg-primary" />
-
                   <div className="flex items-center gap-2">
                     <Button variant="ghost" size="icon" asChild>
-                      <Link href={`/my-agenda/edit/${appointment._id}`}>
+                      <Link href={`/${type}/edit/${appointment._id}`}>
                         <PencilIcon className="size-5" />
                       </Link>
                     </Button>
@@ -126,15 +146,15 @@ export function MyAppointments() {
                     </div>
 
                     <span className="text-sm font-medium">
-                      {intlFormat(appointment.startDate, {
-                        weekday: "long",
-                        day: "2-digit",
-                        month: "long"
+                      {t("form.descriptions.schedule_full_at", {
+                        startDate: intlFormat(appointment.startDate, {
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "long"
+                        }),
+                        startTime: format(appointment.startDate, "HH:mm"),
+                        endTime: format(appointment.endDate, "HH:mm")
                       })}
-                      &nbsp;-&nbsp;
-                      {format(appointment.startDate, "HH:mm")}
-                      &nbsp;até&nbsp;
-                      {format(appointment.endDate, "HH:mm")}
                     </span>
                   </div>
 
@@ -150,19 +170,11 @@ export function MyAppointments() {
                 </div>
                 <Separator />
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="col-start-1 col-end-3 flex gap-2">
-                    <Avatar>
-                      <AvatarFallback>JD</AvatarFallback>
-                    </Avatar>
-
-                    <div className="flex flex-col">
-                      <span className="text-xs">
-                        {t("form.labels.patient")}
-                      </span>
-                      <span className="truncate text-sm font-medium">
-                        {appointment.patient?.name}
-                      </span>
-                    </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs">{t("form.labels.patient")}</span>
+                    <span className="truncate text-sm font-medium">
+                      {appointment.patient?.name}
+                    </span>
                   </div>
 
                   <div className="flex flex-col">
@@ -179,6 +191,32 @@ export function MyAppointments() {
                     </span>
                   </div>
                 </div>
+
+                {type !== "my-agenda" && (
+                  <>
+                    <Separator />
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="flex flex-col">
+                        <span className="text-xs">
+                          {t("form.labels.doctor")}
+                        </span>
+
+                        <span className="truncate text-sm font-medium">
+                          Dr. {appointment.doctor?.name}
+                        </span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs">{t("form.labels.room")}</span>
+
+                        <div className="flex gap-2">
+                          <span className="truncate text-sm font-medium">
+                            {appointment.room}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
 
                 {appointment.status === "waiting" && (
                   <div className="flex justify-end">

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
 import { format } from "date-fns"
 import { useAtomValue } from "jotai"
@@ -18,15 +18,27 @@ import {
 } from "@repo/ui/select"
 import { Separator } from "@repo/ui/separator"
 
-import { calendarAPIAtom } from "../../_atoms/calendar-atom"
-import { NewAppointmentModalForm } from "./new-appointment-modal-form"
+import type { AppointmentType } from "../_atoms/calendar-atom"
+import { getAppointmentsCalendarAPIAtom } from "../_atoms/calendar-atom"
 
-export function CalendarEventActionHeader() {
-  const api = useAtomValue(calendarAPIAtom)
+type Props = React.PropsWithChildren<{
+  type: AppointmentType
+}>
+
+export function CalendarEventActionHeader(props: Props) {
+  const { children, type } = props
+
   const t = useI18n()
   const router = useRouter()
   const searchParams = useSearchParams()
   const { period } = useParams()
+  const calendarAPIAtom = useMemo(
+    () => getAppointmentsCalendarAPIAtom(type),
+    [type]
+  )
+
+  const api = useAtomValue(calendarAPIAtom)
+
   const defaultValue =
     (period?.toString() as "day" | "week" | undefined) ?? "week"
 
@@ -36,8 +48,8 @@ export function CalendarEventActionHeader() {
     const params = new URLSearchParams({
       date: format(api.currentDate, "yyyy-MM-dd")
     })
-    router.push(`/appointments/${defaultValue}?${params.toString()}`)
-  }, [router, api?.currentDate, defaultValue])
+    router.push(`/${type}/${defaultValue}?${params.toString()}`)
+  }, [router, api?.currentDate, defaultValue, type])
 
   return (
     <div className="flex justify-between gap-2 border-b border-gray-100 bg-background px-6 py-4">
@@ -73,7 +85,7 @@ export function CalendarEventActionHeader() {
         <Select
           defaultValue={defaultValue}
           onValueChange={(value) => {
-            router.push(`/appointments/${value}?${searchParams.toString()}`)
+            router.push(`/${type}/${value}?${searchParams.toString()}`)
           }}
         >
           <SelectTrigger className="w-32">
@@ -87,9 +99,12 @@ export function CalendarEventActionHeader() {
           </SelectContent>
         </Select>
 
-        <Separator orientation="vertical" />
-
-        <NewAppointmentModalForm />
+        {children && (
+          <>
+            <Separator orientation="vertical" />
+            {children}
+          </>
+        )}
       </div>
     </div>
   )

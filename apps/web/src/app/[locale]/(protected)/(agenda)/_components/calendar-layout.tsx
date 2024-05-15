@@ -1,15 +1,25 @@
 "use client"
 
+import { useMemo } from "react"
 import { useParams, useSearchParams } from "next/navigation"
 import { useSetAtom } from "jotai"
 
 import { CalendarEvent } from "@repo/ui/calendar-event"
 
-import { calendarAPIAtom } from "../../_atoms/calendar-atom"
+import type { AppointmentType } from "../_atoms/calendar-atom"
+import { getAppointmentsCalendarAPIAtom } from "../_atoms/calendar-atom"
 
-export function CalendarLayout(props: React.PropsWithChildren) {
-  const { children } = props
+type Props = React.PropsWithChildren<{
+  type: AppointmentType
+}>
+
+export function CalendarLayout(props: Props) {
+  const { children, type } = props
   const { period } = useParams()
+  const calendarAPIAtom = useMemo(
+    () => getAppointmentsCalendarAPIAtom(type),
+    [type]
+  )
   const searchParams = useSearchParams()
   const value = (period?.toString() as "day" | "week" | undefined) ?? "week"
   const setApi = useSetAtom(calendarAPIAtom)

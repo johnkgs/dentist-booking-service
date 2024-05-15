@@ -55,10 +55,11 @@ import {
 } from "@repo/ui/select"
 import { cn } from "@repo/ui/utils"
 
-import type { EditAppointmentFields } from "../../_validations/new-appointment-validation"
+import type { AppointmentType } from "../_atoms/calendar-atom"
+import type { EditAppointmentFields } from "../_validations/appointment-validation"
 import { SECOND } from "~/app/[locale]/_shared/utils/constants"
 import { getStatuses } from "~/app/[locale]/_shared/utils/status"
-import { getEditAppointmentSchema } from "../../_validations/new-appointment-validation"
+import { getEditAppointmentSchema } from "../_validations/appointment-validation"
 
 const hourDates = eachMinuteOfInterval(
   {
@@ -74,11 +75,12 @@ const hourOptions = hourDates.map((hour) => ({
 }))
 
 interface Props {
+  type: AppointmentType
   appointment: NonNullable<FunctionReturnType<typeof api.appointments.get>>
 }
 
 export function EditAppointmentForm(props: Props) {
-  const { appointment } = props
+  const { appointment, type } = props
   const t = useI18n()
   const router = useRouter()
 
@@ -147,7 +149,7 @@ export function EditAppointmentForm(props: Props) {
     await editAppointment(payload)
 
     form.reset()
-    router.push("/appointments")
+    router.push(`/${type}`)
   }
 
   return (
@@ -159,7 +161,7 @@ export function EditAppointmentForm(props: Props) {
       >
         <div className="grid gap-4 py-4">
           <Button variant="ghost" size="icon">
-            <Link href="/appointments">
+            <Link href={`/${type}`}>
               <XIcon />
             </Link>
           </Button>
@@ -419,72 +421,74 @@ export function EditAppointmentForm(props: Props) {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="doctorId"
-            render={({ field }) => (
-              <FormItem className="flex flex-col space-y-4">
-                <FormLabel className="inline-flex items-center gap-1.5">
-                  {t("form.labels.doctor")}{" "}
-                  <span className="text-red-500">*</span>
-                </FormLabel>
+          {type !== "my-agenda" && (
+            <FormField
+              control={form.control}
+              name="doctorId"
+              render={({ field }) => (
+                <FormItem className="flex flex-col space-y-4">
+                  <FormLabel className="inline-flex items-center gap-1.5">
+                    {t("form.labels.doctor")}{" "}
+                    <span className="text-red-500">*</span>
+                  </FormLabel>
 
-                <FormControl>
-                  <Combobox>
-                    <ComboboxTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="justify-between"
-                        id="doctor"
-                      >
-                        {doctorOptions?.find(
-                          (doctor) => doctor.value === field.value
-                        )?.label ??
-                          t("form.placeholders.select", {
+                  <FormControl>
+                    <Combobox>
+                      <ComboboxTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="justify-between"
+                          id="doctor"
+                        >
+                          {doctorOptions?.find(
+                            (doctor) => doctor.value === field.value
+                          )?.label ??
+                            t("form.placeholders.select", {
+                              field: t("form.labels.doctor").toLowerCase()
+                            })}
+                          <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
+                        </Button>
+                      </ComboboxTrigger>
+                      <ComboboxContent className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width]">
+                        <ComboboxInput
+                          placeholder={t("form.placeholders.search", {
                             field: t("form.labels.doctor").toLowerCase()
                           })}
-                        <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
-                      </Button>
-                    </ComboboxTrigger>
-                    <ComboboxContent className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width]">
-                      <ComboboxInput
-                        placeholder={t("form.placeholders.search", {
-                          field: t("form.labels.doctor").toLowerCase()
-                        })}
-                      />
-                      <ComboboxList>
-                        <ComboboxEmpty>
-                          {t("form.errors.empty", {
-                            field: t("form.labels.doctor").toLowerCase()
-                          })}
-                        </ComboboxEmpty>
-                        <ComboboxGroup>
-                          {doctorOptions?.map((doctor) => (
-                            <ComboboxItem
-                              key={doctor.value}
-                              value={doctor.value}
-                              onSelect={field.onChange}
-                            >
-                              <CheckIcon
-                                className={cn(
-                                  "mr-2 size-4",
-                                  field.value === doctor.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {doctor.label}
-                            </ComboboxItem>
-                          ))}
-                        </ComboboxGroup>
-                      </ComboboxList>
-                    </ComboboxContent>
-                  </Combobox>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                        />
+                        <ComboboxList>
+                          <ComboboxEmpty>
+                            {t("form.errors.empty", {
+                              field: t("form.labels.doctor").toLowerCase()
+                            })}
+                          </ComboboxEmpty>
+                          <ComboboxGroup>
+                            {doctorOptions?.map((doctor) => (
+                              <ComboboxItem
+                                key={doctor.value}
+                                value={doctor.value}
+                                onSelect={field.onChange}
+                              >
+                                <CheckIcon
+                                  className={cn(
+                                    "mr-2 size-4",
+                                    field.value === doctor.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {doctor.label}
+                              </ComboboxItem>
+                            ))}
+                          </ComboboxGroup>
+                        </ComboboxList>
+                      </ComboboxContent>
+                    </Combobox>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           <FormField
             control={form.control}
@@ -510,7 +514,7 @@ export function EditAppointmentForm(props: Props) {
             disabled={form.formState.isSubmitting}
             asChild
           >
-            <Link href="/appointments">{t("form.actions.cancel")}</Link>
+            <Link href={`/${type}`}>{t("form.actions.cancel")}</Link>
           </Button>
           <Button type="submit" isLoading={form.formState.isSubmitting}>
             {t("form.actions.save")}

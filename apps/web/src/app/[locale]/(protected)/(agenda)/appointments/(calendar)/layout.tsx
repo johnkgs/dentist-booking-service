@@ -1,6 +1,6 @@
 import { Protect } from "@clerk/nextjs"
 
-import { CalendarEventActionHeader } from "./_components/calendar-event-action-header"
+import { CalendarEventActionHeader } from "../../_components/calendar-event-action-header"
 import { DoctorList } from "./_components/doctor-list"
 
 export default function AppointmentsLayout({
@@ -12,7 +12,7 @@ export default function AppointmentsLayout({
         <DoctorList />
 
         <main className="relative flex flex-col overflow-hidden ring-1 ring-slate-900/10">
-          <CalendarEventActionHeader />
+          <CalendarEventActionHeader type="appointments" />
           {children}
         </main>
       </div>
