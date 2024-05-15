@@ -9,6 +9,7 @@ import {
   endOfDay,
   endOfWeek,
   format,
+  isSameDay,
   isSameMonth,
   isSameYear,
   isToday,
@@ -279,6 +280,8 @@ const CalendarEventTimeIndicator = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, _ref) => {
   const trackerElementRef = React.useRef<HTMLDivElement>(null)
+  const { activeDays, style } = useCalendarEvent()
+  const now = new Date()
 
   React.useEffect(() => {
     const HEIGHT = 56
@@ -304,16 +307,35 @@ const CalendarEventTimeIndicator = React.forwardRef<
     return () => {
       clearInterval(intervalId)
     }
-  }, [])
+  }, [activeDays])
 
   return (
     <div
-      ref={trackerElementRef}
-      className={cn("absolute left-[3.25rem] right-0 z-10 flex", className)}
+      className={cn(
+        "col-start-1 col-end-2 row-start-1 grid grid-rows-1 divide-x divide-gray-100",
+        className
+      )}
+      style={style}
       {...props}
     >
-      <div className="-mt-1.5 size-3 rounded-full bg-primary text-right text-xs leading-5 text-white "></div>
-      <div className="h-px w-full border border-dashed border-primary/30" />
+      {activeDays.map((day, index) => (
+        <div
+          key={day.toISOString()}
+          className="relative"
+          style={{ gridColumnStart: index + 1 }}
+        >
+          {isSameDay(day, now) && (
+            <div
+              ref={trackerElementRef}
+              className={cn("absolute -left-1.5 right-0 z-10 flex", className)}
+              {...props}
+            >
+              <div className="-mt-1.5 size-3 flex-shrink-0 rounded-full bg-primary text-right text-xs leading-5 text-white "></div>
+              <div className="h-px w-full border border-dashed border-primary/30" />
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   )
 })
@@ -340,7 +362,7 @@ const CalendarEventGrid = React.forwardRef<
           key={index}
           style={{
             gridColumnStart: index + 1,
-            width: index === daysToDisplayArr.length - 1 ? "2rem" : undefined
+            width: index === daysToDisplay - 1 ? "2rem" : undefined
           }}
         />
       ))}
