@@ -6,6 +6,7 @@ export default {
     add: "Adicionar",
     enable_notifications: "Ativar notificações",
     mark_all_as_read: "Marcar tudo como lido",
+    call: "Chamar",
     call_patient: "Chamar paciente",
     finish_appointment: "Finalizar atendimento"
   },
