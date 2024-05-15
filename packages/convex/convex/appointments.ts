@@ -3,6 +3,7 @@ import { filter } from "convex-helpers/server/filter"
 import { paginationOptsValidator } from "convex/server"
 import { v } from "convex/values"
 import { isWithinInterval } from "date-fns"
+import { matchSorter } from "match-sorter"
 
 import { mutationWithAuth, queryWithAuth } from "./lib/auth"
 
@@ -36,15 +37,17 @@ export const listDoctors = queryWithAuth({
     search: v.optional(v.string())
   },
   handler: async (ctx, args) => {
-    return await filter(ctx.db.query("users"), (user) =>
-      args.search
-        ? !!user.name
-            .toLocaleLowerCase()
-            .includes(args.search.toLocaleLowerCase())
-        : true
-    )
+    const results = await ctx.db
+      .query("users")
       .order("desc")
       .paginate(args.paginationOpts)
+
+    return {
+      ...results,
+      page: matchSorter(results.page, args.search ?? "", {
+        keys: ["name"]
+      })
+    }
   }
 })
 
