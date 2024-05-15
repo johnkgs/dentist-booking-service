@@ -1,5 +1,6 @@
 "use client"
 
+import { Fragment } from "react"
 import { SignedIn, UserButton } from "@clerk/nextjs"
 
 import { useI18n } from "@repo/translation/client"
@@ -8,7 +9,8 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage
+  BreadcrumbPage,
+  BreadcrumbSeparator
 } from "@repo/ui/breadcrumb"
 import { Button } from "@repo/ui/button"
 import {
@@ -45,16 +47,19 @@ export function Header() {
       <div className="flex items-center justify-between p-4">
         <Breadcrumb>
           <BreadcrumbList>
-            {breadcrumbs.map((breadcrumb) => (
-              <BreadcrumbItem key={breadcrumb.path}>
-                {breadcrumb.active ? (
-                  <BreadcrumbPage>{breadcrumb.name}</BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink href={breadcrumb.path}>
-                    {breadcrumb.name}
-                  </BreadcrumbLink>
-                )}
-              </BreadcrumbItem>
+            {breadcrumbs.map((breadcrumb, index) => (
+              <Fragment key={breadcrumb.path}>
+                <BreadcrumbItem>
+                  {breadcrumb.active ? (
+                    <BreadcrumbPage>{breadcrumb.name}</BreadcrumbPage>
+                  ) : (
+                    <BreadcrumbLink href={breadcrumb.path}>
+                      {breadcrumb.name}
+                    </BreadcrumbLink>
+                  )}
+                </BreadcrumbItem>
+                {index !== breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+              </Fragment>
             ))}
           </BreadcrumbList>
         </Breadcrumb>

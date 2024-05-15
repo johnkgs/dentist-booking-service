@@ -120,6 +120,7 @@ export function Appointments(props: Props) {
                     </Button>
                     <PopoverClose asChild>
                       <Button
+                        type="button"
                         variant="ghost"
                         size="icon"
                         className="text-red-500 hover:bg-red-500/90 hover:text-white"

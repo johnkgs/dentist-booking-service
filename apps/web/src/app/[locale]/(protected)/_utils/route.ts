@@ -1,15 +1,27 @@
 export const routeMap = {
   "/home": {
-    title: "home.base"
+    title: "home.base",
+    aliases: []
   },
   "/appointments": {
-    title: "appointments.base"
+    title: "appointments.base",
+    aliases: ["/appointments/[period]"]
+  },
+  "/appointments/edit/[appointmentId]": {
+    title: "appointments.edit",
+    aliases: []
   },
   "/my-agenda": {
-    title: "my_agenda.base"
+    title: "my_agenda.base",
+    aliases: ["/my-agenda/[period]"]
+  },
+  "/my-agenda/edit/[appointmentId]": {
+    title: "my_agenda.edit",
+    aliases: []
   },
   "/front-desk": {
-    title: "front_desk.base"
+    title: "front_desk.base",
+    aliases: []
   }
 } as const
 

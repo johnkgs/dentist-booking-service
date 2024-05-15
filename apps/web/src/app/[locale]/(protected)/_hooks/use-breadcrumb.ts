@@ -18,7 +18,9 @@ export function useBreadcrumb() {
 
   const breadcrumbs = paths.map((path) => ({
     path,
-    active: path === asPath,
+    active:
+      path === asPath ||
+      (routeMap[path].aliases as readonly string[]).includes(asPath ?? ""),
     name: t(routeMap[path].title)
   }))
 
