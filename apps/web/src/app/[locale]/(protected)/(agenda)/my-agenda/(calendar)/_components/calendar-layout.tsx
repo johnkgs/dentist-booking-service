@@ -5,7 +5,7 @@ import { useSetAtom } from "jotai"
 
 import { CalendarEvent } from "@repo/ui/calendar-event"
 
-import { calendarAPIAtom } from "../../_atoms/calendar-atom"
+import { calendarAPIAtom } from "../../../(agenda)/my-agenda/_atoms/calendar-atom"
 
 export function CalendarLayout(props: React.PropsWithChildren) {
   const { children } = props
