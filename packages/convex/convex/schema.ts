@@ -29,14 +29,6 @@ export default defineSchema({
     room: v.string()
   }).index("by_doctor_id", ["doctorId"]),
   receptionQueue: defineTable({
-    doctorId: v.id("users"),
-    patientId: v.id("patients"),
-    status: v.union(
-      v.literal("pending"),
-      v.literal("waiting"),
-      v.literal("ongoing"),
-      v.literal("finished")
-    ),
-    room: v.optional(v.string())
+    appointmentId: v.id("appointments")
   })
 })

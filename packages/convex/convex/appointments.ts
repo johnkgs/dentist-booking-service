@@ -107,6 +107,15 @@ export const mine = queryWithAuth({
   }
 })
 
+export const get = queryWithAuth({
+  args: {
+    appointmentId: v.id("appointments")
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.appointmentId)
+  }
+})
+
 export const newAppointment = mutationWithAuth({
   args: {
     room: v.string(),
@@ -121,5 +130,39 @@ export const newAppointment = mutationWithAuth({
       ...args,
       status: "pending"
     })
+  }
+})
+
+export const editAppointment = mutationWithAuth({
+  args: {
+    appointmentId: v.id("appointments"),
+    room: v.optional(v.string()),
+    startDate: v.optional(v.number()),
+    status: v.optional(
+      v.union(
+        v.literal("pending"),
+        v.literal("waiting"),
+        v.literal("ongoing"),
+        v.literal("finished")
+      )
+    ),
+    endDate: v.optional(v.number()),
+    diffInMinutes: v.optional(v.number()),
+    doctorId: v.optional(v.id("users")),
+    patientId: v.optional(v.id("patients"))
+  },
+  handler: async (ctx, { appointmentId, ...args }) => {
+    return await ctx.db.patch(appointmentId, {
+      ...args
+    })
+  }
+})
+
+export const removeAppointment = mutationWithAuth({
+  args: {
+    appointmentId: v.id("appointments")
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.delete(args.appointmentId)
   }
 })
