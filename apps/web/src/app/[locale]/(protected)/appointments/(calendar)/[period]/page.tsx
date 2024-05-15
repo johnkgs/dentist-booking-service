@@ -5,8 +5,8 @@ import {
   CalendarEventTimeIndicator
 } from "@repo/ui/calendar-event"
 
-import { Appointments } from "../_components/appointments"
 import { CalendarLayout } from "../_components/calendar-layout"
+import { Appointments } from "../../_components/appointments"
 
 export default function Page() {
   return (

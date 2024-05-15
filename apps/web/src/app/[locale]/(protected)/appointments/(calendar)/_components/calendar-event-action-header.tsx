@@ -18,7 +18,7 @@ import {
 } from "@repo/ui/select"
 import { Separator } from "@repo/ui/separator"
 
-import { calendarAPIAtom } from "../_atoms/calendar-atom"
+import { calendarAPIAtom } from "../../_atoms/calendar-atom"
 import { NewAppointmentModalForm } from "./new-appointment-modal-form"
 
 export function CalendarEventActionHeader() {

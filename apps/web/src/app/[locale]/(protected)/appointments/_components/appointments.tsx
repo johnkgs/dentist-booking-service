@@ -1,10 +1,12 @@
 "use client"
 
 import { useMemo } from "react"
-import { useQuery } from "convex/react"
+import Link from "next/link"
+import { useMutation, useQuery } from "convex/react"
 import { format, getUnixTime, intlFormat } from "date-fns"
 import { useAtomValue } from "jotai"
 
+import type { Id } from "@repo/convex/_generated/dataModel"
 import { api } from "@repo/convex/_generated/api"
 import { useI18n } from "@repo/translation/client"
 import { Avatar, AvatarFallback } from "@repo/ui/avatar"
@@ -14,7 +16,7 @@ import {
   CalendarEventAppointment,
   CalendarEventAppointmentItem
 } from "@repo/ui/calendar-event"
-import { CalendarIcon, XIcon } from "@repo/ui/icons"
+import { CalendarIcon, PencilIcon, TrashIcon, XIcon } from "@repo/ui/icons"
 import {
   Popover,
   PopoverClose,
@@ -40,6 +42,16 @@ export function Appointments() {
     endDate: getUnixTime(calendarAPI?.activePeriod.end ?? 0) * SECOND,
     doctorIds
   })
+  const removeAppointment = useMutation(api.appointments.removeAppointment)
+  const editAppointment = useMutation(api.appointments.editAppointment)
+
+  const handleCallPatient = async (appointmentId: Id<"appointments">) => {
+    await editAppointment({ appointmentId, status: "ongoing" })
+  }
+
+  const handleFinishAppointment = async (appointmentId: Id<"appointments">) => {
+    await editAppointment({ appointmentId, status: "finished" })
+  }
 
   return (
     <CalendarEventAppointment>
@@ -82,12 +94,31 @@ export function Appointments() {
               <div className="flex flex-col gap-6">
                 <div className="flex items-center justify-between">
                   <span className="size-4 rounded-sm bg-primary" />
-
-                  <PopoverClose asChild>
-                    <Button variant="ghost" size="icon">
-                      <XIcon />
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="icon" asChild>
+                      <Link href={`/appointments/edit/${appointment._id}`}>
+                        <PencilIcon className="size-5" />
+                      </Link>
                     </Button>
-                  </PopoverClose>
+                    <PopoverClose asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-red-500 hover:bg-red-500/90 hover:text-white"
+                        onClick={() =>
+                          removeAppointment({ appointmentId: appointment._id })
+                        }
+                      >
+                        <TrashIcon className="size-5" />
+                      </Button>
+                    </PopoverClose>
+
+                    <PopoverClose asChild>
+                      <Button variant="ghost" size="icon">
+                        <XIcon />
+                      </Button>
+                    </PopoverClose>
+                  </div>
                 </div>
                 <div className="grid grid-cols-[1fr_auto] gap-4">
                   <div className="flex flex-col">
@@ -169,6 +200,24 @@ export function Appointments() {
                     </div>
                   </div>
                 </div>
+
+                {appointment.status === "waiting" && (
+                  <div className="flex justify-end">
+                    <Button onClick={() => handleCallPatient(appointment._id)}>
+                      {t("form.actions.call_patient")}
+                    </Button>
+                  </div>
+                )}
+                {appointment.status === "ongoing" && (
+                  <div className="flex justify-end">
+                    <Button
+                      colorScheme="green"
+                      onClick={() => handleFinishAppointment(appointment._id)}
+                    >
+                      {t("form.actions.finish_appointment")}
+                    </Button>
+                  </div>
+                )}
               </div>
             </PopoverContent>
           </Popover>
