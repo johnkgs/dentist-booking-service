@@ -1,9 +1,9 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import type { FunctionReturnType } from "convex/server"
 import { createColumnHelper } from "@tanstack/react-table"
-import { intlFormat } from "date-fns"
 
 import type { api } from "@repo/convex/_generated/api"
+import { intlFormat } from "@repo/shared/utils/date-fns"
 
 import type { TableMetaBase } from "../../_types/table-meta"
 import { ActionsCell } from "../_components/cells/actions-cell"

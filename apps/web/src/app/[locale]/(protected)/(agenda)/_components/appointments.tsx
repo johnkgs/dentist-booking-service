@@ -3,11 +3,11 @@
 import { useMemo } from "react"
 import Link from "next/link"
 import { useMutation, useQuery } from "convex/react"
-import { format, getUnixTime, intlFormat } from "date-fns"
 import { useAtomValue } from "jotai"
 
 import type { Id } from "@repo/convex/_generated/dataModel"
 import { api } from "@repo/convex/_generated/api"
+import { format, getUnixTime, intlFormat } from "@repo/shared/utils/date-fns"
 import { useI18n } from "@repo/translation/client"
 import { Badge } from "@repo/ui/badge"
 import { Button } from "@repo/ui/button"

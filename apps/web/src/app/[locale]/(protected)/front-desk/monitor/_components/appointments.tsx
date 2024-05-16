@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from "react"
 import { useQuery } from "convex/react"
-import { intlFormat } from "date-fns"
 
 import { api } from "@repo/convex/_generated/api"
+import { intlFormat } from "@repo/shared/utils/date-fns"
 import { useI18n } from "@repo/translation/client"
 import { Badge } from "@repo/ui/badge"
 import {

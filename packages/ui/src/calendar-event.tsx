@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import {
   differenceInDays,
   differenceInMinutes,
@@ -18,9 +19,14 @@ import {
   setDefaultOptions,
   startOfDay,
   startOfWeek
-} from "date-fns"
-import { addDays, addWeeks, subDays, subWeeks } from "date-fns/fp"
-import { ptBR } from "date-fns/locale"
+} from "@repo/shared/utils/date-fns"
+import {
+  addDays,
+  addWeeks,
+  subDays,
+  subWeeks
+} from "@repo/shared/utils/date-fns/fp"
+import { ptBR } from "@repo/shared/utils/date-fns/locale"
 
 import { cn } from "./utils"
 

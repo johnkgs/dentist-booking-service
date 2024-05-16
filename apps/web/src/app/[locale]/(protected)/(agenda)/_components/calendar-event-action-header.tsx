@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo } from "react"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
-import { format } from "date-fns"
 import { useAtomValue } from "jotai"
 
+import { format } from "@repo/shared/utils/date-fns"
 import { useI18n } from "@repo/translation/client"
 import { Button } from "@repo/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon } from "@repo/ui/icons"

@@ -1,8 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { ptBR } from "date-fns/locale"
 import { DayPicker } from "react-day-picker"
+
+import { ptBR } from "@repo/shared/utils/date-fns/locale"
 
 import { buttonVariants } from "./button"
 import { ChevronLeftIcon, ChevronRightIcon } from "./icons"

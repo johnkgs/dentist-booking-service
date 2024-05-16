@@ -6,6 +6,10 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery } from "convex/react"
+import { useForm } from "react-hook-form"
+
+import type { Doc, Id } from "@repo/convex/_generated/dataModel"
+import { api } from "@repo/convex/_generated/api"
 import {
   differenceInMinutes,
   eachMinuteOfInterval,
@@ -16,11 +20,7 @@ import {
   parse,
   roundToNearestMinutes,
   startOfDay
-} from "date-fns"
-import { useForm } from "react-hook-form"
-
-import type { Doc, Id } from "@repo/convex/_generated/dataModel"
-import { api } from "@repo/convex/_generated/api"
+} from "@repo/shared/utils/date-fns"
 import { useI18n } from "@repo/translation/client"
 import { Button } from "@repo/ui/button"
 import { Calendar } from "@repo/ui/calendar"

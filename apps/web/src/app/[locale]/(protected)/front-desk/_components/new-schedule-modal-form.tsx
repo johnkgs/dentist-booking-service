@@ -3,12 +3,11 @@
 import { Fragment, useMemo, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery } from "convex/react"
-import { format } from "date-fns/format"
-import { intlFormat } from "date-fns/intlFormat"
 import { useForm } from "react-hook-form"
 
 import type { Id } from "@repo/convex/_generated/dataModel"
 import { api } from "@repo/convex/_generated/api"
+import { format, intlFormat } from "@repo/shared/utils/date-fns"
 import { useI18n } from "@repo/translation/client"
 import { Button } from "@repo/ui/button"
 import {

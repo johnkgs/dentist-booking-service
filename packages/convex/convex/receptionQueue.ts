@@ -1,6 +1,7 @@
 import { asyncMap } from "convex-helpers"
 import { v } from "convex/values"
-import { matchSorter } from "match-sorter"
+
+import { matchSorter } from "@repo/shared/utils/match-sorter"
 
 import { mutationWithAuth, queryWithAuth } from "./lib/auth"
 

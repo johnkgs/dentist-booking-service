@@ -2,8 +2,9 @@ import { asyncMap } from "convex-helpers"
 import { filter } from "convex-helpers/server/filter"
 import { paginationOptsValidator } from "convex/server"
 import { v } from "convex/values"
-import { isWithinInterval } from "date-fns"
-import { matchSorter } from "match-sorter"
+
+import { isWithinInterval } from "@repo/shared/utils/date-fns"
+import { matchSorter } from "@repo/shared/utils/match-sorter"
 
 import { mutationWithAuth, queryWithAuth } from "./lib/auth"
 
