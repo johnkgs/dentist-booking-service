@@ -36,7 +36,7 @@ export default {
   descriptions: {
     please_go_to_room: "Por favor, prosseguir para a sala: {room}.",
     schedule_at: "{startDate} até {endDate}",
-    schedule_full_at: "${startDate} - {startTime} até {endTime}"
+    schedule_full_at: "{startDate} - {startTime} até {endTime}"
   },
   validation_errors: {
     required: "Campo obrigatório"
