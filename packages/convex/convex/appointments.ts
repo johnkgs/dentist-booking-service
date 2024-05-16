@@ -116,13 +116,20 @@ export const get = queryWithAuth({
     appointmentId: v.id("appointments")
   },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.appointmentId)
+    const appointment = await ctx.db.get(args.appointmentId)
+    if (!appointment) return
+
+    return {
+      ...appointment,
+      patient: await ctx.db.get(appointment.patientId),
+      doctor: await ctx.db.get(appointment.doctorId)
+    }
   }
 })
 
 export const newAppointment = mutationWithAuth({
   args: {
-    room: v.string(),
+    room: v.optional(v.string()),
     startDate: v.number(),
     endDate: v.number(),
     diffInMinutes: v.number(),

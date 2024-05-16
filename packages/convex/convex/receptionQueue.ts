@@ -118,10 +118,7 @@ export const listAppointments = queryWithAuth({
     search: v.optional(v.string())
   },
   handler: async (ctx, args) => {
-    const appointmentDocuments = await ctx.db
-      .query("appointments")
-      .filter((q) => q.eq(q.field("status"), "pending"))
-      .collect()
+    const appointmentDocuments = await ctx.db.query("appointments").collect()
 
     const result = await asyncMap(
       appointmentDocuments,
