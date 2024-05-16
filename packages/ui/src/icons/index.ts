@@ -1,4 +1,5 @@
 export {
+  ArchiveIcon,
   BellIcon,
   BellRingIcon,
   BriefcaseMedicalIcon,

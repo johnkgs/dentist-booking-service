@@ -25,6 +25,7 @@
     "./separator": "./src/separator.tsx",
     "./switch": "./src/switch.tsx",
     "./table": "./src/table.tsx",
+    "./tooltip": "./src/tooltip.tsx",
     "./icons": "./src/icons/index.ts",
     "./utils": "./src/utils.ts"
   },
@@ -35,7 +36,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/shared": "workspace:^*",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -47,6 +47,8 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
+    "@radix-ui/react-tooltip": "^1.0.7",
+    "@repo/shared": "workspace:^*",
     "class-variance-authority": "^0.7.0",
     "cmdk": "^1.0.0",
     "lucide-react": "^0.373.0",
