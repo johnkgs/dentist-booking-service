@@ -49,7 +49,7 @@ export function DoctorList() {
         {data.map((doctor) => (
           <div key={doctor._id} className="flex items-center gap-2">
             <Checkbox
-              id="checkbox-1"
+              id={`checkbox-${doctor._id}`}
               colorScheme="primary"
               checked={doctorIds.includes(doctor._id)}
               onCheckedChange={(checked) => {
@@ -62,7 +62,7 @@ export function DoctorList() {
               }}
             />
             <label
-              htmlFor="checkbox-1"
+              htmlFor={`checkbox-${doctor._id}`}
               className="cursor-default text-sm text-gray-900"
             >
               Dr. {doctor.name}

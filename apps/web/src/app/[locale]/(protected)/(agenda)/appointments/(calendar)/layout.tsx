@@ -2,6 +2,7 @@ import { Protect } from "@clerk/nextjs"
 
 import { CalendarEventActionHeader } from "../../_components/calendar-event-action-header"
 import { DoctorList } from "./_components/doctor-list"
+import { NewAppointmentModalForm } from "./_components/new-appointment-modal-form"
 
 export default function AppointmentsLayout({
   children
@@ -12,7 +13,9 @@ export default function AppointmentsLayout({
         <DoctorList />
 
         <main className="relative flex flex-col overflow-hidden ring-1 ring-slate-900/10">
-          <CalendarEventActionHeader type="appointments" />
+          <CalendarEventActionHeader type="appointments">
+            <NewAppointmentModalForm />
+          </CalendarEventActionHeader>
           {children}
         </main>
       </div>

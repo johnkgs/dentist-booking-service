@@ -4,7 +4,7 @@ import type { Translate } from "@repo/translation/server"
 
 export const getNewAppointmentSchema = (t: Translate) =>
   z.object({
-    room: z.string().min(1, { message: t("form.validation_errors.required") }),
+    room: z.string().optional(),
     startDate: z.date(),
     startTime: z.date(),
     endTime: z.date(),
