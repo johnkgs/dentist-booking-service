@@ -16,7 +16,6 @@ export function useStoreUserEffect() {
 
   useEffect(() => {
     if (!isAuthenticated) return
-
     // Store the user in the database.
     // Recall that `storeUser` gets the user information via the `auth`
     // object on the server. You don't need to pass anything manually here.

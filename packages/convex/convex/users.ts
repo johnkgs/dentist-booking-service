@@ -3,7 +3,7 @@ import { mutationWithAuth } from "./lib/auth"
 export const store = mutationWithAuth({
   args: {},
   handler: async (ctx) => {
-    const identity = ctx.user
+    const identity = await ctx.auth.getUserIdentity()
     if (!identity) {
       throw new Error("Called storeUser without authentication present")
     }
@@ -21,7 +21,7 @@ export const store = mutationWithAuth({
       return user._id
     }
     return await ctx.db.insert("users", {
-      name: identity.name,
+      name: identity.name ?? "",
       tokenIdentifier: identity.tokenIdentifier
     })
   }
