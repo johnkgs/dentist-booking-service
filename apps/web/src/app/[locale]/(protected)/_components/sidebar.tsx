@@ -1,6 +1,8 @@
 "use client"
 
+import { useMemo } from "react"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 import { Protect } from "@clerk/nextjs"
 
 import { useI18n } from "@repo/translation/client"
@@ -13,35 +15,47 @@ import {
   PillIcon
 } from "@repo/ui/icons"
 
+import type { RoutePaths } from "../_utils/route"
+import { replacePathname } from "../_utils/route"
+import { usePathname } from "../../_shared/hooks/use-pathname"
+
 export function Sidebar() {
   const t = useI18n()
 
-  const sidebar = [
-    {
-      title: t("routes.home.base"),
-      icon: LayoutGridIcon,
-      permission: "",
-      href: "/home"
-    },
-    {
-      title: t("routes.front_desk.base"),
-      icon: MonitorIcon,
-      permission: "org:reception:manage",
-      href: "/front-desk"
-    },
-    {
-      title: t("routes.appointments.base"),
-      icon: CalendarIcon,
-      permission: "org:reception:manage",
-      href: "/appointments"
-    },
-    {
-      title: t("routes.my_agenda.base"),
-      icon: ClipboardIcon,
-      permission: "org:patient:manage",
-      href: "/my-agenda"
-    }
-  ] as const
+  const sidebar = useMemo(
+    () =>
+      [
+        {
+          title: t("routes.home.base"),
+          icon: LayoutGridIcon,
+          permission: "",
+          href: "/home"
+        },
+        {
+          title: t("routes.front_desk.base"),
+          icon: MonitorIcon,
+          permission: "org:reception:manage",
+          href: "/front-desk"
+        },
+        {
+          title: t("routes.appointments.base"),
+          icon: CalendarIcon,
+          permission: "org:reception:manage",
+          href: "/appointments"
+        },
+        {
+          title: t("routes.my_agenda.base"),
+          icon: ClipboardIcon,
+          permission: "org:patient:manage",
+          href: "/my-agenda"
+        }
+      ] as const,
+    [t]
+  )
+
+  const pathname = usePathname()
+  const params = useParams()
+  const asPath = replacePathname(pathname, params) as RoutePaths | undefined
 
   return (
     <aside
@@ -70,7 +84,8 @@ export function Sidebar() {
                 <Button
                   variant="ghost"
                   size="md"
-                  className="w-full justify-start hover:text-primary"
+                  className="w-full justify-start hover:text-primary data-[active=true]:bg-accent data-[active=true]:text-primary"
+                  data-active={asPath?.startsWith(item.href)}
                   asChild
                 >
                   <Link href={item.href}>
