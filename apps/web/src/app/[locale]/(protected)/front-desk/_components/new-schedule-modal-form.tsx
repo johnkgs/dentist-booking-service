@@ -2,6 +2,7 @@
 
 import { Fragment, useMemo, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { fetchQuery } from "convex/nextjs"
 import { useMutation, useQuery } from "convex/react"
 import { useForm } from "react-hook-form"
 
@@ -57,11 +58,34 @@ export function NewScheduleModalForm() {
     search: form.watch("search")
   })
   const newSchedule = useMutation(api.receptionQueue.newSchedule)
+  const notify = useMutation(api.notifications.notify)
   const [open, onOpenChange] = useState(false)
 
   async function onSubmit(values: NewScheduleFields) {
+    const appointmentId = values.appointmentId as Id<"appointments">
     await newSchedule({
-      appointmentId: values.appointmentId as Id<"appointments">
+      appointmentId
+    })
+
+    const appointment = await fetchQuery(api.appointments.get, {
+      appointmentId
+    })
+    if (!appointment) return
+
+    await notify({
+      appointmentId,
+      title: t("common.descriptions.waiting_appointment", {
+        name: appointment.patient?.name
+      }),
+      description: t("form.descriptions.schedule_full_at", {
+        startDate: intlFormat(appointment.startDate, {
+          weekday: "long",
+          day: "2-digit",
+          month: "long"
+        }),
+        startTime: format(appointment.startDate, "HH:mm"),
+        endTime: format(appointment.endDate, "HH:mm")
+      })
     })
 
     form.reset()

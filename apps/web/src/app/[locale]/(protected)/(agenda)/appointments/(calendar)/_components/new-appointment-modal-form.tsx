@@ -3,6 +3,7 @@
 import type { FunctionArgs } from "convex/server"
 import { useMemo, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { fetchQuery } from "convex/nextjs"
 import { useMutation, useQuery } from "convex/react"
 import { useForm } from "react-hook-form"
 
@@ -96,6 +97,7 @@ export function NewAppointmentModalForm() {
   const patientOptions = useQuery(api.appointments.patientOptions)
   const newAppointment = useMutation(api.appointments.newAppointment)
   const [open, onOpenChange] = useState(false)
+  const notify = useMutation(api.notifications.notify)
 
   async function onSubmit(values: NewAppointmentFields) {
     const date = format(values.startDate, "yyyy-MM-dd")
@@ -127,7 +129,29 @@ export function NewAppointmentModalForm() {
       diffInMinutes: differenceInMinutes(endDate, startDate)
     } satisfies FunctionArgs<typeof api.appointments.newAppointment>
 
-    await newAppointment(payload)
+    const appointmentId = await newAppointment(payload)
+
+    const appointment = await fetchQuery(api.appointments.get, {
+      appointmentId
+    })
+    if (!appointment) return
+
+    await notify({
+      appointmentId,
+      doctorId: values.doctorId as Id<"users">,
+      title: t("common.descriptions.new_appointment", {
+        name: appointment.patient?.name
+      }),
+      description: t("form.descriptions.schedule_full_at", {
+        startDate: intlFormat(appointment.startDate, {
+          weekday: "long",
+          day: "2-digit",
+          month: "long"
+        }),
+        startTime: format(appointment.startDate, "HH:mm"),
+        endTime: format(appointment.endDate, "HH:mm")
+      })
+    })
 
     form.reset()
 
