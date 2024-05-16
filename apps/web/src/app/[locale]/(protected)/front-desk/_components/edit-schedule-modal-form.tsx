@@ -517,8 +517,7 @@ export function EditScheduleModalForm(props: Props) {
                 render={({ field }) => (
                   <FormItem className="flex flex-col space-y-4">
                     <FormLabel className="inline-flex items-center gap-1.5">
-                      {t("form.labels.room")}{" "}
-                      <span className="text-red-500">*</span>
+                      {t("form.labels.room")}
                     </FormLabel>
 
                     <FormControl>

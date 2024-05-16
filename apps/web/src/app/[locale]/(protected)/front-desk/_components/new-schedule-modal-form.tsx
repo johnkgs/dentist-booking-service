@@ -205,12 +205,21 @@ export function NewScheduleModalForm() {
               <DialogClose asChild>
                 <Button
                   variant="outline"
-                  disabled={form.formState.isSubmitting}
+                  disabled={
+                    form.formState.isSubmitting ||
+                    form.formState.isSubmitSuccessful
+                  }
                 >
                   {t("form.actions.cancel")}
                 </Button>
               </DialogClose>
-              <Button type="submit" isLoading={form.formState.isSubmitting}>
+              <Button
+                type="submit"
+                isLoading={
+                  form.formState.isSubmitting ||
+                  form.formState.isSubmitSuccessful
+                }
+              >
                 {t("form.actions.save")}
               </Button>
             </DialogFooter>

@@ -440,8 +440,7 @@ export function NewAppointmentModalForm() {
                 render={({ field }) => (
                   <FormItem className="flex flex-col space-y-4 px-2">
                     <FormLabel className="inline-flex items-center gap-1.5">
-                      {t("form.labels.room")}{" "}
-                      <span className="text-red-500">*</span>
+                      {t("form.labels.room")}
                     </FormLabel>
 
                     <FormControl>
