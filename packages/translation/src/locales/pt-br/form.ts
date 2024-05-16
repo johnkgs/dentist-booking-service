@@ -8,7 +8,11 @@ export default {
     mark_all_as_read: "Marcar tudo como lido",
     call: "Chamar",
     call_patient: "Chamar paciente",
-    finish_appointment: "Finalizar atendimento"
+    finish_appointment: "Finalizar atendimento",
+    see_more: "Ver mais",
+    mark_as_read: "Marcar como lido",
+    mark_as_unread: "Marcar como não lido",
+    archive: "Arquivar"
   },
   labels: {
     new_schedule: "Novo atendimento",
