@@ -31,6 +31,7 @@ export const toRead = queryWithAuth({
       .withIndex("by_doctor_id_read", (q) =>
         q.eq("doctorId", doctorId).eq("read", false)
       )
+      .filter((q) => q.eq(q.field("archived"), false))
       .collect()
 
     return notifications.length
