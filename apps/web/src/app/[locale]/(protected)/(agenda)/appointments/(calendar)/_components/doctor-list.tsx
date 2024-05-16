@@ -1,7 +1,7 @@
 "use client"
 
 import type { FunctionReturnType } from "convex/server"
-import { useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { usePaginatedQuery } from "convex/react"
 import { useAtom } from "jotai"
 
@@ -16,19 +16,20 @@ export function DoctorList() {
   const t = useI18n()
   const [search, setSearch] = useState("")
   const [doctorIds, setDoctorIdsAtom] = useAtom(doctorIdsAtom)
-  const previousRef = useRef<
+  const [data, setData] = useState<
     FunctionReturnType<typeof api.appointments.listDoctors>["page"]
   >([])
-  const { results, isLoading } = usePaginatedQuery(
+
+  const { results, status } = usePaginatedQuery(
     api.appointments.listDoctors,
     { search },
     { initialNumItems: 5 }
   )
-  const data = previousRef.current
 
-  if (!isLoading) {
-    previousRef.current = results
-  }
+  useEffect(() => {
+    if (status !== "Exhausted") return
+    setData(results)
+  }, [status, results])
 
   return (
     <div className="flex flex-col gap-2 overflow-y-auto bg-background p-4">
