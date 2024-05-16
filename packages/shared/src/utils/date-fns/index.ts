@@ -1,5 +1,7 @@
 import type { FormatOptions } from "date-fns"
-import { format as formatDate, isValid } from "date-fns"
+import { format as formatDate, isValid, setDefaultOptions } from "date-fns"
+
+import { ptBR } from "./locale"
 
 export {
   addMinutes,
@@ -11,6 +13,7 @@ export {
   endOfDay,
   endOfWeek,
   format,
+  formatDistance,
   getUnixTime,
   intlFormat,
   isEqual,
@@ -25,6 +28,8 @@ export {
   startOfDay,
   startOfWeek
 } from "date-fns"
+
+setDefaultOptions({ locale: ptBR })
 
 type SafeFormat = (
   date: Date | string | number | null,
