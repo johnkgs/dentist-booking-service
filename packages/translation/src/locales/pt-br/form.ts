@@ -4,7 +4,7 @@ export default {
     cancel: "Cancelar",
     save: "Salvar",
     add: "Adicionar",
-    enable_notifications: "Ativar notificações",
+    enable_notifications: "Ativar notificações no dispositivo",
     mark_all_as_read: "Marcar tudo como lido",
     call: "Chamar",
     call_patient: "Chamar paciente",
@@ -12,7 +12,10 @@ export default {
     see_more: "Ver mais",
     mark_as_read: "Marcar como lido",
     mark_as_unread: "Marcar como não lido",
-    archive: "Arquivar"
+    archive: "Arquivar",
+    continue: "Continuar",
+    permission: "Permissão",
+    no: "Não"
   },
   labels: {
     new_schedule: "Novo atendimento",
