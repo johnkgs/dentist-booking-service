@@ -29,6 +29,7 @@ import { cn } from "@repo/ui/utils"
 
 import { useForceUpdate } from "../_hooks/use-force-update"
 import { useInterval } from "../_hooks/use-interval"
+import { useSound } from "../_hooks/use-sound"
 import { useWebNotification } from "../_hooks/use-web-notification"
 import { SECOND } from "../../_shared/utils/constants"
 
@@ -47,6 +48,7 @@ export function Notifications() {
   const archive = useMutation(api.notifications.archive)
   const [forceUpdate] = useForceUpdate()
   const { granted, requestNotification, webNotify } = useWebNotification()
+  const { play } = useSound("/sounds/system-notification.mp3")
 
   useInterval(() => {
     forceUpdate()
@@ -55,11 +57,13 @@ export function Notifications() {
   useEffect(() => {
     if (!watch) return
 
+    play()
+
     webNotify({
       title: watch.title,
       body: watch.description
     })
-  }, [watch, webNotify])
+  }, [watch, webNotify, play])
 
   return (
     <Popover>

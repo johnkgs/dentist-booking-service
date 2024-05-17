@@ -74,6 +74,7 @@ export function NewScheduleModalForm() {
 
     await notify({
       appointmentId,
+      doctorId: appointment.doctorId,
       title: t("common.descriptions.waiting_appointment", {
         name: appointment.patient?.name
       }),

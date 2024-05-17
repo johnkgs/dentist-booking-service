@@ -1,5 +1,7 @@
 "use client"
 
+import { useCallback } from "react"
+
 const supportNotification =
   typeof window !== "undefined" && "Notification" in window
 
@@ -15,12 +17,15 @@ export function useWebNotification() {
     return await Notification.requestPermission()
   }
 
-  function webNotify(options: Options) {
-    if (!supportNotification) return
-    const { title, ...rest } = options
+  const webNotify = useCallback(
+    (options: Options) => {
+      if (!granted) return
+      const { title, ...rest } = options
 
-    return new Notification(title, rest)
-  }
+      return new Notification(title, rest)
+    },
+    [granted]
+  )
 
   return {
     granted,
