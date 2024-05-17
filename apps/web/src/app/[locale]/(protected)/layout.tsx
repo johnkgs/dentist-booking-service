@@ -1,11 +1,13 @@
 import { Header } from "./_components/header"
 import { HideLayout } from "./_components/hide-layout"
+import { NotificationsModal } from "./_components/notifications-modal"
 import { Sidebar } from "./_components/sidebar"
 import SyncUser from "./_components/sync-user"
 
 export default function ProtectedLayout({ children }: React.PropsWithChildren) {
   return (
     <div>
+      <NotificationsModal />
       <SyncUser />
 
       <HideLayout>

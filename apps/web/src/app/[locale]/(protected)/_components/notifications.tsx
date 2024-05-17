@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { useMutation, usePaginatedQuery, useQuery } from "convex/react"
 
 import { api } from "@repo/convex/_generated/api"
@@ -28,6 +29,7 @@ import { cn } from "@repo/ui/utils"
 
 import { useForceUpdate } from "../_hooks/use-force-update"
 import { useInterval } from "../_hooks/use-interval"
+import { useWebNotification } from "../_hooks/use-web-notification"
 import { SECOND } from "../../_shared/utils/constants"
 
 export function Notifications() {
@@ -37,15 +39,27 @@ export function Notifications() {
     isLoading,
     status,
     loadMore
-  } = usePaginatedQuery(api.notifications.list, {}, { initialNumItems: 2 })
+  } = usePaginatedQuery(api.notifications.list, {}, { initialNumItems: 3 })
   const toReadCount = useQuery(api.notifications.toRead)
+  const watch = useQuery(api.notifications.watch)
+
   const read = useMutation(api.notifications.read)
   const archive = useMutation(api.notifications.archive)
   const [forceUpdate] = useForceUpdate()
+  const { granted, requestNotification, webNotify } = useWebNotification()
 
   useInterval(() => {
     forceUpdate()
   }, SECOND * 30)
+
+  useEffect(() => {
+    if (!watch) return
+
+    webNotify({
+      title: watch.title,
+      body: watch.description
+    })
+  }, [watch, webNotify])
 
   return (
     <Popover>
@@ -83,7 +97,7 @@ export function Notifications() {
                   {t("common.descriptions.send_notifications_to_device")}
                 </p>
               </div>
-              <Switch />
+              <Switch checked={granted} onCheckedChange={requestNotification} />
             </div>
             <div>
               {notifications.map((notification, index) => (
@@ -120,11 +134,7 @@ export function Notifications() {
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="size-auto p-1"
-                              >
+                              <div className="flex items-center justify-center">
                                 <Checkbox
                                   colorScheme="primary"
                                   className="size-[1.125rem]"
@@ -136,7 +146,7 @@ export function Notifications() {
                                     })
                                   }}
                                 />
-                              </Button>
+                              </div>
                             </TooltipTrigger>
                             <TooltipContent>
                               <p>
