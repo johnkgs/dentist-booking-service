@@ -24,6 +24,7 @@ export const list = queryWithAuth({
 
       return {
         ...appointment,
+        _creationTime: item._creationTime,
         receptionQueueId: item._id,
         room: appointment.status === "waiting" ? "" : appointment.room,
         patient: await ctx.db.get(appointment.patientId),
@@ -58,6 +59,7 @@ export const monitor = queryWithAuth({
 
       return {
         ...appointment,
+        _creationTime: item._creationTime,
         receptionQueueId: item._id,
         room: appointment.status === "ongoing" ? appointment.room : "",
         patient: await ctx.db.get(appointment.patientId)
@@ -85,6 +87,7 @@ export const lastCallsMonitor = queryWithAuth({
 
       return {
         ...appointment,
+        _creationTime: item._creationTime,
         receptionQueueId: item._id,
         room: appointment.status === "ongoing" ? appointment.room : "",
         patient: await ctx.db.get(appointment.patientId)
@@ -148,6 +151,7 @@ export const get = queryWithAuth({
 
     return {
       ...appointment,
+      _creationTime: item._creationTime,
       receptionQueueId: item._id,
       room: appointment.status === "waiting" ? "" : appointment.room,
       patient: await ctx.db.get(appointment.patientId)

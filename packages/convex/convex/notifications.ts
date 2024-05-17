@@ -3,6 +3,24 @@ import { v } from "convex/values"
 
 import { mutationWithAuth, queryWithAuth } from "./lib/auth"
 
+export const watch = queryWithAuth({
+  args: {},
+  handler: async (ctx) => {
+    const doctorId = ctx.user?._id
+    if (!doctorId) return
+    const now = Date.now() - 1000
+
+    return await ctx.db
+      .query("notifications")
+      .withIndex("by_doctor_id", (q) =>
+        q.eq("doctorId", doctorId).gte("_creationTime", now)
+      )
+      .filter((q) => q.eq(q.field("archived"), false))
+      .order("desc")
+      .first()
+  }
+})
+
 export const list = queryWithAuth({
   args: {
     paginationOpts: paginationOptsValidator
