@@ -89,7 +89,6 @@ export const lastCallsMonitor = queryWithAuth({
         ...appointment,
         _creationTime: item._creationTime,
         receptionQueueId: item._id,
-        room: appointment.status === "ongoing" ? appointment.room : "",
         patient: await ctx.db.get(appointment.patientId)
       }
     })
@@ -111,7 +110,8 @@ export const newSchedule = mutationWithAuth({
     await ctx.db.patch(args.appointmentId, { status: "waiting" })
 
     return await ctx.db.insert("receptionQueue", {
-      appointmentId: args.appointmentId
+      appointmentId: args.appointmentId,
+      notified: false
     })
   }
 })
@@ -194,5 +194,43 @@ export const removeSchedule = mutationWithAuth({
   },
   handler: async (ctx, args) => {
     return await ctx.db.delete(args.receptionQueueId)
+  }
+})
+
+export const lastCallsQueueMonitor = queryWithAuth({
+  args: {},
+  handler: async (ctx) => {
+    const documents = await ctx.db
+      .query("receptionQueue")
+      .filter((q) => q.eq(q.field("notified"), false))
+      .collect()
+
+    const data = await asyncMap(documents, async (item) => {
+      const appointment = await ctx.db.get(item.appointmentId)
+      if (!appointment) return
+
+      return {
+        ...appointment,
+        _creationTime: item._creationTime,
+        receptionQueueId: item._id,
+        notified: item.notified,
+        patient: await ctx.db.get(appointment.patientId)
+      }
+    })
+
+    return data.filter(
+      (appointment) => !!appointment && appointment.status === "ongoing"
+    ) as NonNullable<(typeof data)[number]>[]
+  }
+})
+
+export const call = mutationWithAuth({
+  args: {
+    receptionQueueId: v.id("receptionQueue")
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.patch(args.receptionQueueId, {
+      notified: true
+    })
   }
 })

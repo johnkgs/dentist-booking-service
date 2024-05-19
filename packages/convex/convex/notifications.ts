@@ -4,20 +4,20 @@ import { v } from "convex/values"
 import { mutationWithAuth, queryWithAuth } from "./lib/auth"
 
 export const watch = queryWithAuth({
-  args: {},
-  handler: async (ctx) => {
-    const doctorId = ctx.user?._id
-    if (!doctorId) return
-    const now = Date.now() - 1000
+  args: {
+    paginationOpts: paginationOptsValidator
+  },
+  handler: async (ctx, args) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
+    const doctorId = ctx.user?._id!
 
     return await ctx.db
       .query("notifications")
-      .withIndex("by_doctor_id", (q) =>
-        q.eq("doctorId", doctorId).gte("_creationTime", now)
+      .withIndex("by_doctor_id_notified", (q) =>
+        q.eq("doctorId", doctorId).eq("notified", false)
       )
       .filter((q) => q.eq(q.field("archived"), false))
-      .order("desc")
-      .first()
+      .paginate(args.paginationOpts)
   }
 })
 
@@ -71,7 +71,8 @@ export const notify = mutationWithAuth({
       ...args,
       doctorId: args.doctorId ?? doctorId,
       read: false,
-      archived: false
+      archived: false,
+      notified: false
     })
   }
 })
@@ -83,6 +84,17 @@ export const archive = mutationWithAuth({
   handler: async (ctx, args) => {
     await ctx.db.patch(args.notificationId, {
       archived: true
+    })
+  }
+})
+
+export const notified = mutationWithAuth({
+  args: {
+    notificationId: v.id("notifications")
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.notificationId, {
+      notified: true
     })
   }
 })

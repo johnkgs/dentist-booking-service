@@ -29,17 +29,20 @@ export default defineSchema({
     room: v.optional(v.string())
   }).index("by_doctor_id", ["doctorId"]),
   receptionQueue: defineTable({
-    appointmentId: v.id("appointments")
+    appointmentId: v.id("appointments"),
+    notified: v.boolean()
   }),
   notifications: defineTable({
     doctorId: v.id("users"),
     appointmentId: v.id("appointments"),
     read: v.boolean(),
     archived: v.boolean(),
+    notified: v.boolean(),
     title: v.string(),
     description: v.string(),
     room: v.optional(v.string())
   })
     .index("by_doctor_id", ["doctorId"])
+    .index("by_doctor_id_notified", ["doctorId", "notified"])
     .index("by_doctor_id_read", ["doctorId", "read"])
 })
