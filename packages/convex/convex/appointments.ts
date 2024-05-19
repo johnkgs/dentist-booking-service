@@ -3,7 +3,7 @@ import { filter } from "convex-helpers/server/filter"
 import { paginationOptsValidator } from "convex/server"
 import { v } from "convex/values"
 
-import { isWithinInterval } from "@repo/shared/utils/date-fns"
+import { isAfter, isBefore } from "@repo/shared/utils/date-fns"
 import { matchSorter } from "@repo/shared/utils/match-sorter"
 
 import { mutationWithAuth, queryWithAuth } from "./lib/auth"
@@ -64,10 +64,9 @@ export const list = queryWithAuth({
     const appointmentDocuments = await filter(
       ctx.db.query("appointments"),
       (appointment) =>
-        isWithinInterval(appointment._creationTime, {
-          start: startDate,
-          end: endDate
-        }) && doctorIds.includes(appointment.doctorId)
+        isAfter(appointment.startDate, startDate) &&
+        isBefore(appointment.endDate, endDate) &&
+        doctorIds.includes(appointment.doctorId)
     ).collect()
 
     return await asyncMap(appointmentDocuments, async (appointment) => ({
@@ -94,8 +93,8 @@ export const mine = queryWithAuth({
       .withIndex("by_doctor_id", (q) => q.eq("doctorId", doctorId))
       .filter((q) =>
         q.and(
-          q.gte(q.field("_creationTime"), startDate),
-          q.lte(q.field("_creationTime"), endDate)
+          q.gte(q.field("startDate"), startDate),
+          q.lte(q.field("endDate"), endDate)
         )
       )
       .collect()

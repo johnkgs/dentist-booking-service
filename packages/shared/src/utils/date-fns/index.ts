@@ -16,6 +16,8 @@ export {
   formatDistance,
   getUnixTime,
   intlFormat,
+  isAfter,
+  isBefore,
   isEqual,
   isSameDay,
   isSameMonth,
