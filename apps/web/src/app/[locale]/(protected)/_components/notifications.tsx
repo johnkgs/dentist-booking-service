@@ -42,10 +42,15 @@ export function Notifications() {
     loadMore
   } = usePaginatedQuery(api.notifications.list, {}, { initialNumItems: 3 })
   const toReadCount = useQuery(api.notifications.toRead)
-  const watch = useQuery(api.notifications.watch)
+  const {
+    results: watch,
+    loadMore: load,
+    status: watchStatus
+  } = usePaginatedQuery(api.notifications.watch, {}, { initialNumItems: 1 })
 
   const read = useMutation(api.notifications.read)
   const archive = useMutation(api.notifications.archive)
+  const notified = useMutation(api.notifications.notified)
   const [forceUpdate] = useForceUpdate()
   const { granted, requestNotification, webNotify } = useWebNotification()
   const { play } = useSound("/sounds/system-notification.mp3")
@@ -55,15 +60,20 @@ export function Notifications() {
   }, SECOND * 30)
 
   useEffect(() => {
-    if (!watch) return
+    const curr = watch[0]
+    if (!curr) return
 
     play()
 
     webNotify({
-      title: watch.title,
-      body: watch.description
+      title: curr.title,
+      body: curr.description
     })
-  }, [watch, webNotify, play])
+
+    void notified({ notificationId: curr._id })
+
+    if (watchStatus === "CanLoadMore") load(1)
+  }, [watch, webNotify, play, load, notified, watchStatus])
 
   return (
     <Popover>
